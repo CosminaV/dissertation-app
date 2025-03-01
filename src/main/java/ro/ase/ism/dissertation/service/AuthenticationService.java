@@ -25,7 +25,6 @@ import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
-import java.sql.Ref;
 import java.util.HashMap;
 import java.util.List;
 
