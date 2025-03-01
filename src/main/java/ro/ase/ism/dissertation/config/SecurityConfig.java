@@ -37,6 +37,14 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 ).userDetailsService(userDetailsService)
+                .logout(l -> l.logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(customLogoutHandler)
+                        .logoutSuccessHandler(
+                                ((request, response, authentication) -> {
+                                    response.setContentType("application/json");
+                                    SecurityContextHolder.clearContext();
+                                })
+                        ))
                 .exceptionHandling(e -> e
                         .accessDeniedHandler(accessDeniedHandler)
                         .authenticationEntryPoint(authenticationEntryPoint))
@@ -45,12 +53,6 @@ public class SecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(l -> l.logoutUrl("/api/v1/auth/logout")
-                        .addLogoutHandler(customLogoutHandler)
-                        .logoutSuccessHandler(
-                                ((request, response, authentication) ->
-                                        SecurityContextHolder.clearContext())
-                        ))
                 .build();
 
     }
