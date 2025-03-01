@@ -26,7 +26,6 @@ import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -40,6 +39,8 @@ public class AuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RegisterResponse register(RegisterRequest request) {
+        log.info("Initializing registration...");
+
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             log.error("User with email %s already exists.".formatted(request.getEmail()));
             throw new UserAlreadyExistsException("User with email %s already exists.".formatted(request.getEmail()));
@@ -64,6 +65,8 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest request) {
+        log.info("Initializing authentication...");
+
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
@@ -75,6 +78,7 @@ public class AuthenticationService {
                     )
             );
         } catch (BadCredentialsException ex) {
+            log.error("Invalid username or password");
             throw new BadCredentialsException("Invalid credentials");
         }
 
@@ -82,7 +86,7 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
         // revoke previous refresh tokens for this user
-        revokeAllRefreshTokens(user);
+        jwtService.revokeAllRefreshTokens(user);
 
         // save the refresh token in the db
         saveRefreshToken(refreshToken, user);
@@ -98,6 +102,8 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<?> refresh(String refreshToken) {
+        log.info("Refreshing token...");
+
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token not found");
         }
@@ -111,7 +117,9 @@ public class AuthenticationService {
             String newAccessToken = jwtService.generateAccessToken(new HashMap<>(), user);
             String newRefreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
-            incrementAccessTokenVersion(user);
+            // invalidate old access tokens
+            jwtService.incrementAccessTokenVersion(user);
+            userRepository.save(user);
 
             ResponseCookie refreshCookie = createCookie("refreshToken", newRefreshToken);
 
@@ -123,18 +131,6 @@ public class AuthenticationService {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token not valid");
-    }
-
-    private void revokeAllRefreshTokens(User user) {
-        List<RefreshToken> validRefreshTokens =
-                refreshTokenRepository.findAllRefreshTokenByUser(user.getId());
-        if(!validRefreshTokens.isEmpty()) {
-            validRefreshTokens.forEach(rt -> {
-                rt.setLoggedOut(true);
-            });
-        }
-
-        refreshTokenRepository.saveAll(validRefreshTokens);
     }
 
     private void saveRefreshToken(String refreshToken, User user) {
@@ -154,10 +150,5 @@ public class AuthenticationService {
                 .path("/api/v1/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
-    }
-
-    private void incrementAccessTokenVersion(User user) {
-        user.setTokenVersion(user.getTokenVersion() + 1);
-        userRepository.save(user);
     }
 }

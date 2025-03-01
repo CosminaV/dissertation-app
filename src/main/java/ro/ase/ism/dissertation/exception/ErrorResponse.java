@@ -1,5 +1,10 @@
 package ro.ase.ism.dissertation.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class ErrorResponse {
     private String error;
 
@@ -7,12 +12,5 @@ public class ErrorResponse {
         this.error = error;
     }
 
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
 }
 

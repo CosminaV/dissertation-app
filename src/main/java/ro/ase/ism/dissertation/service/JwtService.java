@@ -9,11 +9,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ro.ase.ism.dissertation.model.token.RefreshToken;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -68,6 +70,20 @@ public class JwtService {
                 .map(rt -> !rt.isLoggedOut()).orElse(false);
 
         return isTokenNotRevoked && isTokenValid(token, userDetails);
+    }
+
+    public void revokeAllRefreshTokens(User user) {
+        List<RefreshToken> validRefreshTokens =
+                refreshTokenRepository.findAllRefreshTokenByUser(user.getId());
+        if(!validRefreshTokens.isEmpty()) {
+            validRefreshTokens.forEach(rt -> rt.setLoggedOut(true));
+        }
+
+        refreshTokenRepository.saveAll(validRefreshTokens);
+    }
+
+    public void incrementAccessTokenVersion(User user) {
+        user.setTokenVersion(user.getTokenVersion() + 1);
     }
 
     private String generateToken(
