@@ -32,12 +32,12 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                         .anyRequest()
                         .authenticated()
                 ).userDetailsService(userDetailsService)
-                .logout(l -> l.logoutUrl("/api/v1/auth/logout")
+                .logout(l -> l.logoutUrl("/api/auth/logout")
                         .addLogoutHandler(customLogoutHandler)
                         .logoutSuccessHandler(
                                 ((request, response, authentication) -> {

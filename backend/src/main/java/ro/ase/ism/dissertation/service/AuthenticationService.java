@@ -147,7 +147,7 @@ public class AuthenticationService {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
-                .path("/api/v1/auth/refresh")
+                .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
     }
