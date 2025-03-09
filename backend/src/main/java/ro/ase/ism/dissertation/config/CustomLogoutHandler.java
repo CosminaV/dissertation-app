@@ -74,7 +74,7 @@ public class CustomLogoutHandler implements LogoutHandler {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
-                .path("/api/auth/refresh")
+                .path("/api/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
     }

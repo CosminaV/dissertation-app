@@ -46,7 +46,7 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException("User with email %s already exists.".formatted(request.getEmail()));
         }
 
-        if (!PasswordValidator.isPasswordValid(request.getPassword())) {
+        if (!request.getPassword().isBlank() && !PasswordValidator.isPasswordValid(request.getPassword())) {
             log.error("Password does not meet complexity requirements.");
             throw new PasswordNotValidException("Password does not meet complexity requirements.");
         }
@@ -147,7 +147,7 @@ public class AuthenticationService {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
-                .path("/api/auth/refresh")
+                .path("/api/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
     }
