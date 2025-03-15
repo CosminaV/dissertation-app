@@ -22,7 +22,7 @@ const Register = () => {
         setErrors({});
 
         try {
-            const response = await api.post("/register", formData);
+            const response = await api.post("/auth/register", formData);
             console.log(response.data);
             navigate("/login");
         } catch (err) {
