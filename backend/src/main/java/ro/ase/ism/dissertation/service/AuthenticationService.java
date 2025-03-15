@@ -85,7 +85,6 @@ public class AuthenticationService {
         // check if user has an invalidated refresh token
         var latestRefreshToken = refreshTokenRepository.findLatestTokenByUserId(user.getId());
         if (latestRefreshToken.isPresent() && !latestRefreshToken.get().isLoggedOut()) {
-            log.info("User had a previous invalidated session. Incrementing token version.");
             jwtService.incrementAccessTokenVersion(user);
             userRepository.save(user);
         }
@@ -100,7 +99,7 @@ public class AuthenticationService {
 
         var accessToken = jwtService.generateAccessToken(new HashMap<>(), user);
 
-        //create cookie for the refresh token
+        // create cookie for the refresh token
         ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
 
         return ResponseEntity.ok()
@@ -130,6 +129,13 @@ public class AuthenticationService {
             jwtService.incrementAccessTokenVersion(user);
             userRepository.save(user);
 
+            // revoke previous refresh tokens for this user
+            jwtService.revokeAllRefreshTokens(user);
+
+            // save the refresh token in the db
+            saveRefreshToken(newRefreshToken, user);
+
+            // create cookie  for the refresh token
             ResponseCookie refreshCookie = createCookie("refreshToken", newRefreshToken);
 
             return ResponseEntity.ok()
