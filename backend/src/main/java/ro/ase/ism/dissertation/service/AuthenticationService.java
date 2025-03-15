@@ -82,7 +82,14 @@ public class AuthenticationService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        var accessToken = jwtService.generateAccessToken(new HashMap<>(), user);
+        // check if user has an invalidated refresh token
+        var latestRefreshToken = refreshTokenRepository.findLatestTokenByUserId(user.getId());
+        if (latestRefreshToken.isPresent() && !latestRefreshToken.get().isLoggedOut()) {
+            log.info("User had a previous invalidated session. Incrementing token version.");
+            jwtService.incrementAccessTokenVersion(user);
+            userRepository.save(user);
+        }
+
         var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
         // revoke previous refresh tokens for this user
@@ -90,6 +97,8 @@ public class AuthenticationService {
 
         // save the refresh token in the db
         saveRefreshToken(refreshToken, user);
+
+        var accessToken = jwtService.generateAccessToken(new HashMap<>(), user);
 
         //create cookie for the refresh token
         ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
@@ -147,7 +156,7 @@ public class AuthenticationService {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Strict")
-                .path("/api/refresh")
+                .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
     }

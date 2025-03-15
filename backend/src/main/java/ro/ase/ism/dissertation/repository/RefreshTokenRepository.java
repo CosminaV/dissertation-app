@@ -2,6 +2,7 @@ package ro.ase.ism.dissertation.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
     List<RefreshToken> findAllRefreshTokenByUser(Integer userId);
 
     Optional<RefreshToken> findByToken(String token);
+
+    @Query("SELECT r FROM RefreshToken r WHERE r.user.id = :userId ORDER BY r.createdAt DESC LIMIT 1")
+    Optional<RefreshToken> findLatestTokenByUserId(@Param("userId") Integer userId);
+
 }
