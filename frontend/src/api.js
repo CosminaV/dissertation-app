@@ -10,4 +10,21 @@ const api = axios.create({
     withCredentials: true, // for the http cookie
 });
 
+const publicEndpoints = ["/register", "/authenticate", "/refresh"];
+
+// interceptor used for adding access token to each secure request
+export const setAuthToken = (token) => {
+    api.interceptors.request.use((config) => {
+        const isPublic = publicEndpoints.some((endpoint) => config.url.includes(endpoint));
+
+        if (!isPublic && token) {
+            config.headers["Authorization"] = `Bearer ${token}`;
+        } else {
+            delete config.headers["Authorization"];
+        }
+
+        return config;
+    });
+};
+
 export default api;
