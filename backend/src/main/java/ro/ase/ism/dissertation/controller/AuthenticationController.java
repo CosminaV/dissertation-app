@@ -11,7 +11,7 @@ import ro.ase.ism.dissertation.auth.RegisterResponse;
 import ro.ase.ism.dissertation.service.AuthenticationService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
