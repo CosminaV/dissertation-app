@@ -68,8 +68,9 @@ public class JwtService {
     public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
         boolean isTokenNotRevoked = refreshTokenRepository.findByToken(token)
                 .map(rt -> !rt.isLoggedOut()).orElse(false);
+        boolean isTokenValid = isTokenValid(token, userDetails);
 
-        return isTokenNotRevoked && isTokenValid(token, userDetails);
+        return isTokenNotRevoked && isTokenValid;
     }
 
     public void revokeAllRefreshTokens(User user) {

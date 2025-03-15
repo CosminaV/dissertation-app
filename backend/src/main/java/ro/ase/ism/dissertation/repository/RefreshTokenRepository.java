@@ -21,5 +21,4 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Inte
 
     @Query("SELECT r FROM RefreshToken r WHERE r.user.id = :userId ORDER BY r.createdAt DESC LIMIT 1")
     Optional<RefreshToken> findLatestTokenByUserId(@Param("userId") Integer userId);
-
 }
