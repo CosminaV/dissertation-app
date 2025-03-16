@@ -73,7 +73,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         return ResponseCookie.from(name, value)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("None")
                 .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
