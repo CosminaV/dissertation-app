@@ -1,5 +1,5 @@
 import {createContext, useState, useContext, useEffect, useCallback, useRef} from "react";
-import api from "../api";
+import api, {setupInterceptors, setCurrentAccessToken} from "../api";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = (token) => {
         setAccessToken(token);
+        setCurrentAccessToken(token);
     };
 
     // remove the access token from context when user logs out
@@ -22,6 +23,9 @@ export const AuthProvider = ({ children }) => {
             console.error("Error during logout", error);
         }
         setAccessToken(null);
+        setCurrentAccessToken(null);
+        sessionStorage.removeItem("wasLoggedIn");
+        hasRefreshed.current = false;
         navigate("/login");
     }, [navigate]);
 
@@ -29,20 +33,25 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         try {
             const response = await api.post("/auth/refresh");
-
-            if (response.data.accessToken) {
-                setAccessToken(response.data.accessToken);
-                navigate("/dashboard", {replace: true});
+            const newAccessToken = response.data.accessToken;
+            if (newAccessToken) {
+                login(newAccessToken);
+                return newAccessToken;
             }
         } catch (error) {
             console.error("Refresh token expired or invalid", error);
             setAccessToken(null);
             sessionStorage.removeItem("wasLoggedIn")
             navigate("/login");
+            throw error; // so interceptor knows if the refresh fails
         } finally {
             setLoading(false);
         }
     }, [navigate]);
+
+    useEffect(() => {
+        setupInterceptors(refreshAccessToken, logout);
+    }, [refreshAccessToken, logout]);
 
     useEffect(() => {
         if (hasRefreshed.current) return;
@@ -50,10 +59,13 @@ export const AuthProvider = ({ children }) => {
         const wasLoggedIn = sessionStorage.getItem("wasLoggedIn");
         if (wasLoggedIn && !accessToken) { // manual refresh
             console.log("Attempting refresh access token...")
-            refreshAccessToken();
-            hasRefreshed.current = true;
+            refreshAccessToken()
+                .then(() => hasRefreshed.current = true)
+                .catch(() => hasRefreshed.current = false);
+        } else {
+            setLoading(false);
         }
-    }, [accessToken, refreshAccessToken]);
+    }, [accessToken, refreshAccessToken, logout]);
 
     return (
         <AuthContext.Provider value={{ accessToken, login, logout, loading }}>
