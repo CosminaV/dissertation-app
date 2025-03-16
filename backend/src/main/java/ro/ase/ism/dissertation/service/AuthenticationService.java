@@ -110,7 +110,7 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<?> refresh(String refreshToken) {
-        log.info("Refreshing token...");
+        log.info("Refreshing access token...");
 
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token not found");
@@ -122,24 +122,13 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user found"));
 
         if(jwtService.isRefreshTokenValid(refreshToken, user)) {
-            String newAccessToken = jwtService.generateAccessToken(new HashMap<>(), user);
-            String newRefreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
-
             // invalidate old access tokens
             jwtService.incrementAccessTokenVersion(user);
             userRepository.save(user);
 
-            // revoke previous refresh tokens for this user
-            jwtService.revokeAllRefreshTokens(user);
-
-            // save the refresh token in the db
-            saveRefreshToken(newRefreshToken, user);
-
-            // create cookie  for the refresh token
-            ResponseCookie refreshCookie = createCookie("refreshToken", newRefreshToken);
+            String newAccessToken = jwtService.generateAccessToken(new HashMap<>(), user);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                     .body(AuthenticationResponse.builder()
                             .accessToken(newAccessToken)
                             .build());
@@ -161,7 +150,7 @@ public class AuthenticationService {
         return ResponseCookie.from(name, value)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("None")
                 .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
