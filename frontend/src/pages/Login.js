@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
-import { setAuthToken } from "../api";
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, accessToken, logout } = useAuth();
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
 
@@ -23,7 +22,6 @@ const Login = () => {
 
             const accessToken = response.data.accessToken;
             login(accessToken);
-            setAuthToken(accessToken);
             sessionStorage.setItem("wasLoggedIn", true);
             navigate("/dashboard");
         } catch (err) {
@@ -43,6 +41,15 @@ const Login = () => {
         }
     };
 
+    if (accessToken) {
+        return (
+            <div>
+                <h2>You are already logged in.</h2>
+                <p>If you want to log in with another account, please log out first.</p>
+                <button onClick={logout}>Logout</button>
+            </div>
+        );
+    }
     return (
         <div className="login-container">
             <h2>Login</h2>

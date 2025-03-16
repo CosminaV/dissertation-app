@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import {useAuth} from "../context/AuthContext";
 
 const Register = () => {
     const navigate = useNavigate();
+    const { accessToken, logout } = useAuth();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -43,6 +45,15 @@ const Register = () => {
         }
     };
 
+    if (accessToken) {
+        return (
+            <div>
+                <h2>You are already logged in.</h2>
+                <p>If you want register another account, please log out first.</p>
+                <button onClick={logout}>Logout</button>
+            </div>
+        );
+    }
     return (
         <div className="register-container">
             <h2>Register</h2>
