@@ -18,5 +18,15 @@ jwt:
   secret-key: 746ebd9206d8d17f1358dbcc338768b082c057a5c6ec702c28a976b0b191d62a
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
-#  access-token-expiration: 10000
+#  access-token-expiration: 30000
 #  refresh-token-expiration: 5000
+
+account:
+  activation-link: http://localhost:8080/api/auth/activate?token=
+
+# SendGrid config
+sendgrid:
+  api-key: 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
+  sender-email: gradus.platform@gmail.com
+
+set-password-url: http://localhost:3000/set-password

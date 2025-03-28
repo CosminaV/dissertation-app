@@ -12,11 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ro.ase.ism.dissertation.auth.AuthenticationRequest;
-import ro.ase.ism.dissertation.auth.AuthenticationResponse;
-import ro.ase.ism.dissertation.auth.RegisterRequest;
-import ro.ase.ism.dissertation.auth.RegisterResponse;
+import ro.ase.ism.dissertation.auth.dto.*;
 import ro.ase.ism.dissertation.auth.validator.PasswordValidator;
+import ro.ase.ism.dissertation.exception.AccountNotActivatedException;
 import ro.ase.ism.dissertation.exception.PasswordNotValidException;
 import ro.ase.ism.dissertation.exception.UserAlreadyExistsException;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
@@ -25,6 +23,9 @@ import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Slf4j
@@ -46,18 +47,22 @@ public class AuthenticationService {
             throw new UserAlreadyExistsException("User with email %s already exists.".formatted(request.getEmail()));
         }
 
-        if (!request.getPassword().isBlank() && !PasswordValidator.isPasswordValid(request.getPassword())) {
-            log.error("Password does not meet complexity requirements.");
-            throw new PasswordNotValidException("Password does not meet complexity requirements.");
-        }
+        Role roleToAssign = switch (request.getRole()) {
+            case STUDENT -> Role.STUDENT;
+            case TEACHER -> Role.TEACHER;
+            case ADMIN -> throw new RuntimeException("You can't self-register as admin.");
+            default -> Role.USER; // fallback
+        };
 
+        String activationToken = generateSecureToken();
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(roleToAssign)
+                .activationToken(activationToken)
                 .build();
+
         userRepository.save(user);
 
         log.info("User registered successfully: %s".formatted(request.getEmail()));
@@ -137,6 +142,38 @@ public class AuthenticationService {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token not valid");
     }
 
+    public ResponseEntity<String> setNewPassword(SetPasswordRequest request) {
+        log.info("Email din request: " + request.getEmail());
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+
+        if (!user.isActivated() || !user.isPendingPasswordSetup()) {
+            throw new AccountNotActivatedException("Operation not allowed");
+        }
+
+        if (user.getPasswordSetupToken() == null || !user.getPasswordSetupToken().equals(request.getToken())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password token invalid");
+        }
+
+        if (user.getPasswordSetupTokenExpiresAt().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.status(HttpStatus.GONE).body("Password token expired");
+        }
+
+        String newPassword = request.getPassword();
+        if (!newPassword.isBlank() && !PasswordValidator.isPasswordValid(newPassword)) {
+            log.error("Password does not meet complexity requirements.");
+            throw new PasswordNotValidException("Password does not meet complexity requirements.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordSetupToken(null);
+        user.setPasswordSetupTokenExpiresAt(null);
+        user.setPendingPasswordSetup(false);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Password set successfully.");
+    }
+
     private void saveRefreshToken(String refreshToken, User user) {
         RefreshToken dbRefreshToken = RefreshToken.builder()
                 .token(refreshToken)
@@ -154,5 +191,10 @@ public class AuthenticationService {
                 .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
+    }
+
+    private String generateSecureToken() {
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(130, random).toString(32);
     }
 }

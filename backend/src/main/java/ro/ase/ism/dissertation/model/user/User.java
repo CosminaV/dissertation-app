@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +40,23 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @Builder.Default
     private Integer tokenVersion = 0;
+
+    @Column(unique = true)
+    private String activationToken;
+
+    private LocalDateTime activationTokenExpiresAt;
+
+    @Column(unique = true)
+    private String passwordSetupToken;
+
+    private LocalDateTime passwordSetupTokenExpiresAt;
+
+    @Builder.Default
+    private boolean pendingPasswordSetup = false;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean activated = false;
 
     @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;

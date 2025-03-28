@@ -4,10 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ro.ase.ism.dissertation.auth.AuthenticationRequest;
-import ro.ase.ism.dissertation.auth.AuthenticationResponse;
-import ro.ase.ism.dissertation.auth.RegisterRequest;
-import ro.ase.ism.dissertation.auth.RegisterResponse;
+import ro.ase.ism.dissertation.auth.dto.AuthenticationRequest;
+import ro.ase.ism.dissertation.auth.dto.AuthenticationResponse;
+import ro.ase.ism.dissertation.auth.dto.SetPasswordRequest;
 import ro.ase.ism.dissertation.service.AuthenticationService;
 
 @RestController
@@ -16,12 +15,6 @@ import ro.ase.ism.dissertation.service.AuthenticationService;
 public class AuthenticationController {
 
     private final AuthenticationService authService;
-
-    @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(
-            @Valid  @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
-    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
@@ -34,4 +27,8 @@ public class AuthenticationController {
         return authService.refresh(refreshToken);
     }
 
+    @PostMapping("/set-password")
+    public ResponseEntity<String> setPassword(@RequestBody SetPasswordRequest request) {
+        return authService.setNewPassword(request);
+    }
 }
