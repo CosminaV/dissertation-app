@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Component;
-import ro.ase.ism.dissertation.auth.LogoutResponse;
+import ro.ase.ism.dissertation.auth.dto.LogoutResponse;
 import ro.ase.ism.dissertation.exception.ErrorResponse;
 import ro.ase.ism.dissertation.repository.UserRepository;
 import ro.ase.ism.dissertation.service.JwtService;
