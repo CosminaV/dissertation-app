@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.auth;
+package ro.ase.ism.dissertation.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

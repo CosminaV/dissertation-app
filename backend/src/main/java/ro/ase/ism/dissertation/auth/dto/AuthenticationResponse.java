@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.auth;
+package ro.ase.ism.dissertation.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
