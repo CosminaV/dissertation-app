@@ -15,6 +15,7 @@ import ro.ase.ism.dissertation.repository.UserRepository;
 public class BackendApplication {
 
 	public static void main(String[] args) {
+		EnvLoader.loadEnv();
 		SpringApplication.run(BackendApplication.class, args);
 	}
 

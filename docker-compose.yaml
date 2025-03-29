@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - backend
     restart: unless-stopped
 
   pgadmin:
@@ -25,11 +25,24 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - backend
+    restart: unless-stopped
+
+  vault:
+    container_name: vault
+    image: hashicorp/vault:1.19.0
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./vault/config:/vault/config
+      - ./vault/data:/vault/data
+    command: vault server -config=/vault/config/vault-config.hcl
+    networks:
+      - backend
     restart: unless-stopped
 
 networks:
-  postgres:
+  backend:
     driver: bridge
 
 volumes:
