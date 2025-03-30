@@ -143,7 +143,6 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<String> setNewPassword(SetPasswordRequest request) {
-        log.info("Email din request: " + request.getEmail());
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
@@ -172,6 +171,19 @@ public class AuthenticationService {
         userRepository.save(user);
 
         return ResponseEntity.ok("Password set successfully.");
+    }
+
+    public UserDTO getCurrentUserInfo(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getRole().name()
+        );
     }
 
     private void saveRefreshToken(String refreshToken, User user) {

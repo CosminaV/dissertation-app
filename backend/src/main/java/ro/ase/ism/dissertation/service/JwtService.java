@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
+import ro.ase.ism.dissertation.model.user.Role;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 
@@ -47,7 +48,9 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails) {
         int tokenVersion = ((User) userDetails).getTokenVersion();
+        Role role = ((User) userDetails).getRole();
         extraClaims.put("token_version", tokenVersion);
+        extraClaims.put("role", role.name());
         return generateToken(extraClaims, userDetails, accessTokenExpire);
     }
 
