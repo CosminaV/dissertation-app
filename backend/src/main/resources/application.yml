@@ -3,7 +3,7 @@ spring:
     name: gradus
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -34,7 +34,7 @@ spring:
 #      schema-locations: classpath:schema.sql
 
 jwt:
-#  access-token-expiration: 900000
+  access-token-expiration: 900000
   refresh-token-expiration: 604800000
-  access-token-expiration: 30000
+#  access-token-expiration: 30000
 #  refresh-token-expiration: 5000
