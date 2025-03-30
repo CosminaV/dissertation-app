@@ -1,0 +1,86 @@
+.navbar {
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-image {
+    height: 70px;
+    width: auto;
+}
+
+.logo-text {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #222831;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.navbar-links a {
+    font-weight: 500;
+    color: #222831;
+    text-decoration: none;
+}
+
+.navbar-user {
+    position: relative;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.navbar-user:hover .dropdown-content,
+.navbar-user:focus-within .dropdown-content {
+    display: block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0;
+    right: 0;
+    top: 100%;
+    z-index: 10;
+    min-width: 140px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.dropdown-content a,
+.dropdown-content button {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #222831;
+    text-decoration: none;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box; /* important pentru ca padding-ul să nu depășească containerul */
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}

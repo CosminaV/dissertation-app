@@ -1,0 +1,133 @@
+.admin-users-container {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+}
+
+button {
+    background-color: #f9c74f;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.user-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.user-card {
+    background-color: #fffbea;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.role-tag {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.role-tag.teacher {
+    background-color: #90be6d;
+    color: white;
+}
+
+.role-tag.student {
+    background-color: #577590;
+    color: white;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: transparent;
+    padding: 0;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+}
+
+.custom-dropdown {
+    position: relative;
+    font-weight: 500;
+    color: #222831;
+}
+
+.dropdown-label {
+    background-color: #fffbea;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    min-width: 140px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    text-align: center;
+}
+
+.dropdown-label::after {
+    content: "▼";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    pointer-events: none;
+    color: #222831;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+    width: 100%;
+    overflow: hidden;
+}
+
+.custom-dropdown:hover .dropdown-options {
+    display: block;
+}
+
+.dropdown-options div {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #222831;
+    cursor: pointer;
+}
+
+.dropdown-options div:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+    border-radius: 0;
+}
