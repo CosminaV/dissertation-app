@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../api";
-import {useAuth} from "../context/AuthContext";
+import "../styles/register.css";
+import "../styles/form-inputs.css";
 
-const Register = () => {
-    const navigate = useNavigate();
-    const { accessToken, logout } = useAuth();
+const Register = ({ onSuccess, onClose }) => {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
         email: "",
-        password: "",
+        role: "STUDENT",
     });
 
     const [errors, setErrors] = useState({});
+    const [message, setMessage] = useState("");
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,53 +21,79 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
+        setMessage("");
 
         try {
-            const response = await api.post("/auth/register", formData);
-            console.log(response.data);
-            navigate("/login");
-        } catch (err) {
-            if (err.response && err.response.status === 400) {
-                const errorData = err.response.data;
+            await api.post("/admin/register", formData);
+            setMessage("User registered successfully.");
+            onSuccess?.();
+            setFormData({ firstName: "", lastName: "", email: "", role: "STUDENT" });
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                const errorData = error.response.data;
 
                 if (errorData.errors && typeof errorData.errors === "object") {
                     setErrors(errorData.errors);
                 } else if (errorData.error) {
-                    setErrors({general: errorData.error});
-                }
-                else {
+                    setErrors({ general: errorData.error });
+                } else {
                     setErrors({ general: "Registration failed. Please check your input." });
                 }
             } else {
-                setErrors({general: "Server error. Please try again later."});
+                setErrors({ general: "Server error. Please try again later." });
             }
         }
     };
 
-    if (accessToken) {
-        return (
-            <div>
-                <h2>You are already logged in.</h2>
-                <p>If you want register another account, please log out first.</p>
-                <button onClick={logout}>Logout</button>
-            </div>
-        );
-    }
     return (
-        <div className="register-container">
-            <h2>Register</h2>
+        <div className="register-modal">
+            <button className="close-button" onClick={onClose}>×</button>
+            <h2 className="register-title">Register New User</h2>
+            {message && <p className="success">{message}</p>}
             {errors.general && <p className="error">{errors.general}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}  />
+            <form onSubmit={handleSubmit} className="register-form">
+                <input
+                    className="input-field"
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                />
                 {errors.firstName && <p className="error">{errors.firstName}</p>}
-                <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange}  />
+
+                <input
+                    className="input-field"
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                />
                 {errors.lastName && <p className="error">{errors.lastName}</p>}
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange}  />
+
+                <input
+                    className="input-field"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                />
                 {errors.email && <p className="error">{errors.email}</p>}
-                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange}/>
-                {errors.password && <p className="error">{errors.password}</p>}
-                <button type="submit">Register</button>
+
+                <select
+                    className="input-field"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                >
+                    <option value="STUDENT">Student</option>
+                    <option value="TEACHER">Teacher</option>
+                </select>
+
+                <button type="submit" className="submit-button">Register</button>
             </form>
         </div>
     );

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
+import "../styles/login.css";
+import "../styles/form-inputs.css";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -19,7 +21,6 @@ const Login = () => {
 
         try {
             const response = await api.post("/auth/authenticate", formData);
-
             const accessToken = response.data.accessToken;
             login(accessToken);
             sessionStorage.setItem("wasLoggedIn", true);
@@ -43,23 +44,39 @@ const Login = () => {
 
     if (accessToken) {
         return (
-            <div>
+            <div className="already-logged-in">
                 <h2>You are already logged in.</h2>
                 <p>If you want to log in with another account, please log out first.</p>
                 <button onClick={logout}>Logout</button>
             </div>
         );
     }
+
     return (
-        <div className="login-container">
-            <h2>Login</h2>
-            {error && <p className="error">{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-                <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
-                <button type="submit">Login</button>
-            </form>
-            <p>Don't have an account? <Link to="/register">Register here</Link></p>
+        <div className="login-page">
+            <div className="login-card">
+                <h2 className="login-title">Login - Gradus</h2>
+                {error && <p className="error-message">{error}</p>}
+                <form onSubmit={handleSubmit} className="login-form">
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="login-input"
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="login-input"
+                    />
+                    <button type="submit">Login</button>
+                </form>
+            </div>
         </div>
     );
 };

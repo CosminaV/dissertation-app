@@ -1,0 +1,29 @@
+input,
+select,
+textarea {
+    background-color: #fffff5;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    color: #222831;
+    font-family: 'Segoe UI', sans-serif;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    background-color: #fffde1;
+    border-color: #f9c74f;
+    outline: none;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #fffde1 inset !important;
+    box-shadow: 0 0 0 1000px #fffde1 inset !important;
+    -webkit-text-fill-color: #222831 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
