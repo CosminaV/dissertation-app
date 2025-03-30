@@ -14,19 +14,20 @@ spring:
     import: vault://
   cloud:
     vault:
-      host: localhost
-      scheme: http
-      port: 8200
       authentication: token
       token: ${VAULT_TOKEN}
       kv:
         backend: secret
         default-context: gradus-keyvault
+      ssl:
+        trust-store: classpath:vault-truststore.jks
+        trust-store-password: ${VAULT_TRUST_STORE_PASSWORD}
+      uri: https://localhost:8200
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${custom.db.url}
-    username: ${custom.db.username}
-    password: ${custom.db.password}
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
 #  sql:
 #    init:
 #      mode: always
