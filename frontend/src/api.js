@@ -10,7 +10,7 @@ const api = axios.create({
     withCredentials: true, // for the http cookie
 });
 
-const publicEndpoints = ["/register", "/authenticate", "/refresh"];
+const publicEndpoints = ["/authenticate", "/refresh", "/set-password"];
 
 let currentAccessToken = null;
 
@@ -41,7 +41,6 @@ export const setupInterceptors = (refreshAccessToken, logout) => {
     api.interceptors.response.use((response) => response,
         async (error) => {
             const originalRequest = error.config;
-            console.log("originalRequest", originalRequest);
 
             if (error.response && error.response.status === 401) {
                 const errorMessage = error.response.data?.error;
@@ -58,8 +57,8 @@ export const setupInterceptors = (refreshAccessToken, logout) => {
                         return Promise.reject(error);
                     }
                 }
-                return Promise.reject(error);
             }
+            return Promise.reject(error);
         })
 }
 
