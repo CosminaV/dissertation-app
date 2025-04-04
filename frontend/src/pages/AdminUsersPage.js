@@ -26,10 +26,10 @@ const AdminUsersPage = () => {
     const handleSendEmails = async () => {
         try {
             setSendingEmails(true);
-            await api.get("/admin/send-activation");
-            alert("Activation emails sent to all unactivated accounts.");
+            await api.get("/admin/send-otps");
+            alert("OTP emails sent.");
         } catch (error) {
-            console.error("Failed to send activation emails", error);
+            console.error("Failed to send OTP emails", error);
             alert("Failed to send activation emails.");
         } finally {
             setSendingEmails(false);
@@ -69,7 +69,7 @@ const AdminUsersPage = () => {
                     </div>
 
                     <button onClick={handleSendEmails} disabled={sendingEmails}>
-                        {sendingEmails ? "Sending..." : "Send Activation Emails"}
+                        {sendingEmails ? "Sending..." : "Send OTP Emails"}
                     </button>
                     <button onClick={() => setShowForm(true)}>+ Register New User</button>
                 </div>
