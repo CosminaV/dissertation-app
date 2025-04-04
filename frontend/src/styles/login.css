@@ -47,3 +47,26 @@
     font-size: 0.9rem;
     text-align: center;
 }
+
+.toggle-login-mode {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.toggle-login-mode button {
+    padding: 0.5rem 1rem;
+    background-color: #f9c74f;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-login-mode button.active,
+.toggle-login-mode button:hover {
+    background-color: #f9844a;
+    color: white;
+}

@@ -9,6 +9,7 @@ const Login = () => {
     const navigate = useNavigate();
     const { login, accessToken, logout } = useAuth();
     const [formData, setFormData] = useState({ email: "", password: "" });
+    const [loginMode, setLoginMode] = useState("PASSWORD");
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -20,11 +21,21 @@ const Login = () => {
         setError("");
 
         try {
-            const response = await api.post("/auth/authenticate", formData);
-            const accessToken = response.data.accessToken;
+            const endpoint = loginMode === "PASSWORD" ? "/auth/authenticate" : "/auth/authenticate-otp";
+            const payload = loginMode === "PASSWORD"
+                ? { email: formData.email, password: formData.password }
+                : { email: formData.email, otp: formData.password };
+
+            const response = await api.post(endpoint, payload);
+            const { accessToken, needsPasswordSetup } = response.data;
             login(accessToken);
             sessionStorage.setItem("wasLoggedIn", true);
-            navigate("/dashboard");
+
+            if (needsPasswordSetup) {
+                navigate("/set-password", { state: { email : formData.email } });
+            } else {
+                navigate("/dashboard");
+            }
         } catch (err) {
             if (err.response) {
                 const data = err.response.data;
@@ -56,6 +67,17 @@ const Login = () => {
         <div className="login-page">
             <div className="login-card">
                 <h2 className="login-title">Login - Gradus</h2>
+                <div className="toggle-login-mode">
+                    <button
+                        className={loginMode === "PASSWORD" ? "active" : ""}
+                        onClick={() => setLoginMode("PASSWORD")}
+                    >Password</button>
+                    <button
+                        className={loginMode === "OTP" ? "active" : ""}
+                        onClick={() => setLoginMode("OTP")}
+                    >One-Time Password</button>
+                </div>
+
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleSubmit} className="login-form">
                     <input
@@ -67,9 +89,9 @@ const Login = () => {
                         className="login-input"
                     />
                     <input
-                        type="password"
+                        type={loginMode === "PASSWORD" ? "password" : "text"}
                         name="password"
-                        placeholder="Password"
+                        placeholder={loginMode === "PASSWORD" ? "Password" : "One-Time Password"}
                         value={formData.password}
                         onChange={handleChange}
                         className="login-input"
