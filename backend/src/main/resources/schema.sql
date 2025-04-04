@@ -9,12 +9,6 @@ CREATE TABLE _user (
     password VARCHAR(255),
     role VARCHAR(255),
     token_version INTEGER NOT NULL DEFAULT 0,
-    activation_token VARCHAR(255) UNIQUE,
-    activation_token_expires_at TIMESTAMP,
-    password_setup_token VARCHAR(255) UNIQUE,
-    password_setup_token_expires_at TIMESTAMP,
-    pending_password_setup BOOLEAN NOT NULL DEFAULT FALSE,
-    activated BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE refresh_token (
