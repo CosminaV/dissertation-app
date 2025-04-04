@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.service.JwtService;
 
 import java.io.IOException;
@@ -57,6 +58,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                if (userDetails instanceof User user && user.getPassword() == null) {
+                    String path = request.getRequestURI();
+                    if (!path.contains("/auth/set-password")) {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.getWriter().write("Password setup is required!");
+                        return;
+                    }
+                }
             }
         }
         filterChain.doFilter(request, response);

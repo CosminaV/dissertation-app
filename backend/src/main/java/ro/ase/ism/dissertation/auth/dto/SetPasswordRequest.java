@@ -1,5 +1,7 @@
 package ro.ase.ism.dissertation.auth.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -20,5 +22,6 @@ public class SetPasswordRequest {
     @NotBlank(message = "Password is required")
     private String password;
 
-    private String token;
+    @Enumerated(EnumType.STRING)
+    private ChangePasswordContext changePasswordContext;
 }
