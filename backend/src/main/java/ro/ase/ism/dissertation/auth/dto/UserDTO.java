@@ -16,6 +16,7 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String role;
+    private boolean activated;
 
     public static UserDTO from(User user) {
         return UserDTO.builder()
@@ -24,6 +25,7 @@ public class UserDTO {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .activated(user.getPassword() != null)
                 .build();
     }
 }
