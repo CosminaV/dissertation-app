@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ro.ase.ism.dissertation.auth.dto.AuthenticationRequest;
-import ro.ase.ism.dissertation.auth.dto.AuthenticationResponse;
-import ro.ase.ism.dissertation.auth.dto.SetPasswordRequest;
-import ro.ase.ism.dissertation.auth.dto.UserDTO;
+import ro.ase.ism.dissertation.auth.dto.*;
 import ro.ase.ism.dissertation.service.AuthenticationService;
 
 @RestController
@@ -22,6 +19,12 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @Valid @RequestBody AuthenticationRequest request) {
         return authService.authenticate(request);
+    }
+
+    @PostMapping("/authenticate-otp")
+    public ResponseEntity<AuthenticationResponse> authenticateWithOtp(
+            @Valid @RequestBody OtpAuthenticationRequest request) {
+        return authService.authenticateWithOtp(request);
     }
 
     @PostMapping("/refresh")

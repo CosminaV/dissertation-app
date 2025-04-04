@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     private String accessToken;
+
+    @Builder.Default
+    private boolean needsPasswordSetup = false;
 }

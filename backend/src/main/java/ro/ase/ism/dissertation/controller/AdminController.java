@@ -8,11 +8,10 @@ import ro.ase.ism.dissertation.auth.dto.RegisterRequest;
 import ro.ase.ism.dissertation.auth.dto.RegisterResponse;
 import ro.ase.ism.dissertation.auth.dto.UserDTO;
 import ro.ase.ism.dissertation.service.AuthenticationService;
-import ro.ase.ism.dissertation.service.EmailService;
+import ro.ase.ism.dissertation.service.OtpService;
 import ro.ase.ism.dissertation.service.UserService;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -20,7 +19,7 @@ import java.util.Map;
 public class AdminController {
 
     private final AuthenticationService authService;
-    private final EmailService emailService;
+    private final OtpService otpService;
     private final UserService userService;
 
     @PostMapping("/register")
@@ -29,20 +28,14 @@ public class AdminController {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @GetMapping("/send-activation")
-    public ResponseEntity<String> sendActivationEmail() {
-        emailService.sendActivationEmailsToAllUnverifiedUsers();
-        return ResponseEntity.ok("Activation emails sent");
+    @GetMapping("/send-otps")
+    public ResponseEntity<String> sendOtps() {
+        otpService.generateAndSendOtpsToUsersWithoutPassword();
+        return ResponseEntity.ok("OTP emails sent");
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getNonAdminUsers() {
         return ResponseEntity.ok(userService.getNonAdminUsers());
     }
-
-    @GetMapping("/users/activation-status")
-    public ResponseEntity<Map<String, List<UserDTO>>> getUsersByActivationStatus() {
-        return ResponseEntity.ok(userService.getUsersGroupedByActivationStatus());
-    }
-
 }

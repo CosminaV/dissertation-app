@@ -36,9 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/auth/authenticate",
-                                "/api/auth/set-password",
-                                "/api/auth/refresh",
-                                "/api/auth/activate").permitAll()
+                                "/api/auth/authenticate-otp",
+                                "/api/auth/refresh").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
                         .anyRequest()

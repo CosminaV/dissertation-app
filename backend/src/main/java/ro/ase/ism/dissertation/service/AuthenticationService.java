@@ -14,12 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ro.ase.ism.dissertation.auth.dto.*;
 import ro.ase.ism.dissertation.auth.validator.PasswordValidator;
-import ro.ase.ism.dissertation.exception.AccountNotActivatedException;
 import ro.ase.ism.dissertation.exception.PasswordNotValidException;
 import ro.ase.ism.dissertation.exception.UserAlreadyExistsException;
+import ro.ase.ism.dissertation.model.otp.OneTimePassword;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 import ro.ase.ism.dissertation.model.user.Role;
 import ro.ase.ism.dissertation.model.user.User;
+import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
@@ -27,6 +28,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,6 +40,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final OneTimePasswordRepository oneTimePasswordRepository;
 
     public RegisterResponse register(RegisterRequest request) {
         log.info("Initializing registration...");
@@ -54,13 +57,11 @@ public class AuthenticationService {
             default -> Role.USER; // fallback
         };
 
-        String activationToken = generateSecureToken();
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .role(roleToAssign)
-                .activationToken(activationToken)
                 .build();
 
         userRepository.save(user);
@@ -73,7 +74,7 @@ public class AuthenticationService {
         log.info("Initializing authentication...");
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         try {
             authenticationManager.authenticate(
@@ -114,6 +115,47 @@ public class AuthenticationService {
                         .build());
     }
 
+    public ResponseEntity<AuthenticationResponse> authenticateWithOtp(OtpAuthenticationRequest request) {
+        log.info("Authenticating with OTP for email: {}", request.getEmail());
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Optional<OneTimePassword> otpOptional = oneTimePasswordRepository.findByUserAndUsedFalse(user);
+        if (otpOptional.isEmpty()) {
+            throw new BadCredentialsException("Invalid or already used OTP");
+        }
+
+        var otp = otpOptional.get();
+
+        if (!passwordEncoder.matches(request.getOtp(), otp.getOtp())) {
+            throw new BadCredentialsException("Incorrect OTP");
+        }
+
+        if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new BadCredentialsException("OTP expired");
+        }
+
+        // mark OTP as used
+        otp.setUsed(true);
+        oneTimePasswordRepository.save(otp);
+
+        // continue with issuing tokens
+        String accessToken = jwtService.generateAccessToken(new HashMap<>(), user);
+        String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+
+        saveRefreshToken(refreshToken, user);
+
+        ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .needsPasswordSetup(user.getPassword() == null)
+                        .build());
+    }
+
     public ResponseEntity<?> refresh(String refreshToken) {
         log.info("Refreshing access token...");
 
@@ -126,7 +168,7 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found"));
 
-        if(jwtService.isRefreshTokenValid(refreshToken, user)) {
+        if (jwtService.isRefreshTokenValid(refreshToken, user)) {
             // invalidate old access tokens
             jwtService.incrementAccessTokenVersion(user);
             userRepository.save(user);
@@ -142,32 +184,25 @@ public class AuthenticationService {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh Token not valid");
     }
 
+    // TODO: for future can be extended for the other 2 contexts
     public ResponseEntity<String> setNewPassword(SetPasswordRequest request) {
+        log.info("Setting first password for user {}", request.getEmail());
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (!user.isActivated() || !user.isPendingPasswordSetup()) {
-            throw new AccountNotActivatedException("Operation not allowed");
-        }
-
-        if (user.getPasswordSetupToken() == null || !user.getPasswordSetupToken().equals(request.getToken())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Password token invalid");
-        }
-
-        if (user.getPasswordSetupTokenExpiresAt().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.status(HttpStatus.GONE).body("Password token expired");
+        var context = request.getChangePasswordContext();
+        if (context == ChangePasswordContext.FIRST_TIME) {
+            if (user.getPassword() != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is already set.");
+            }
         }
 
         String newPassword = request.getPassword();
-        if (!newPassword.isBlank() && !PasswordValidator.isPasswordValid(newPassword)) {
-            log.error("Password does not meet complexity requirements.");
+        if (!PasswordValidator.isPasswordValid(newPassword)) {
             throw new PasswordNotValidException("Password does not meet complexity requirements.");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setPasswordSetupToken(null);
-        user.setPasswordSetupTokenExpiresAt(null);
-        user.setPendingPasswordSetup(false);
         userRepository.save(user);
 
         return ResponseEntity.ok("Password set successfully.");
@@ -182,7 +217,8 @@ public class AuthenticationService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getPassword() != null
         );
     }
 
