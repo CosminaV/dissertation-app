@@ -26,7 +26,6 @@ public class BackendApplication {
 				User admin = new User();
 				admin.setFirstName("admin");
 				admin.setEmail("admin@admin.com");
-				admin.setActivated(true);
 				admin.setPassword(new BCryptPasswordEncoder().encode("admin")); // cripteaza parola
 				admin.setRole(Role.ADMIN);
 

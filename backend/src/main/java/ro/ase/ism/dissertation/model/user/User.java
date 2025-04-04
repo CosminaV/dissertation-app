@@ -41,23 +41,6 @@ public class User implements UserDetails {
     @Builder.Default
     private Integer tokenVersion = 0;
 
-    @Column(unique = true)
-    private String activationToken;
-
-    private LocalDateTime activationTokenExpiresAt;
-
-    @Column(unique = true)
-    private String passwordSetupToken;
-
-    private LocalDateTime passwordSetupTokenExpiresAt;
-
-    @Builder.Default
-    private boolean pendingPasswordSetup = false;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean activated = false;
-
     @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;
 
