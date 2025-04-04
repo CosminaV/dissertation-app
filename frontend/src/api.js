@@ -10,7 +10,7 @@ const api = axios.create({
     withCredentials: true, // for the http cookie
 });
 
-const publicEndpoints = ["/authenticate", "/refresh", "/set-password"];
+const publicEndpoints = ["/authenticate", "/refresh", "/authenticate-otp"];
 
 let currentAccessToken = null;
 
