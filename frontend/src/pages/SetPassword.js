@@ -1,33 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/setpassword.css";
 import "../styles/form-inputs.css";
 
 const SetPasswordPage = () => {
-    const [email, setEmail] = useState("");
-    const [token, setToken] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const location = useLocation();
+    const email = location.state?.email;
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const emailParam = params.get("email");
-        const tokenParam = params.get("token");
-
-        if (emailParam && tokenParam) {
-            setEmail(emailParam);
-            setToken(tokenParam);
-        } else {
-            setMessage("Invalid or incomplete link.");
-        }
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const payload = { email, password, token };
+        const payload = { email, password, changePasswordContext: "FIRST_TIME" };
 
         try {
             await api.post("/auth/set-password", payload);
@@ -35,7 +22,7 @@ const SetPasswordPage = () => {
             setTimeout(() => navigate("/login"), 2000);
         } catch (error) {
             console.error(error.response.data);
-            setMessage("An error occurred while setting the password.");
+            setMessage(error.response.data.error);
         }
     };
 
