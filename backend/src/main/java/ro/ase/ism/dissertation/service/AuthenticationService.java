@@ -12,16 +12,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.ase.ism.dissertation.auth.dto.*;
 import ro.ase.ism.dissertation.auth.validator.PasswordValidator;
+import ro.ase.ism.dissertation.exception.InvalidAssignmentException;
 import ro.ase.ism.dissertation.exception.PasswordNotValidException;
 import ro.ase.ism.dissertation.exception.UserAlreadyExistsException;
 import ro.ase.ism.dissertation.model.otp.OneTimePassword;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 import ro.ase.ism.dissertation.model.user.Role;
+import ro.ase.ism.dissertation.model.user.Student;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
+import ro.ase.ism.dissertation.repository.StudentRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
 import java.math.BigInteger;
@@ -42,6 +46,7 @@ public class AuthenticationService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final OneTimePasswordRepository oneTimePasswordRepository;
 
+    @Transactional
     public RegisterResponse register(RegisterRequest request) {
         log.info("Initializing registration...");
 
@@ -53,7 +58,7 @@ public class AuthenticationService {
         Role roleToAssign = switch (request.getRole()) {
             case STUDENT -> Role.STUDENT;
             case TEACHER -> Role.TEACHER;
-            case ADMIN -> throw new RuntimeException("You can't self-register as admin.");
+            case ADMIN -> throw new InvalidAssignmentException("You can't self-register as admin.");
             default -> Role.USER; // fallback
         };
 
@@ -64,7 +69,18 @@ public class AuthenticationService {
                 .role(roleToAssign)
                 .build();
 
-        userRepository.save(user);
+        if (roleToAssign == Role.STUDENT) {
+            Student student = Student.builder()
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
+                    .email(request.getEmail())
+                    .role(Role.STUDENT)
+                    .educationLevel(request.getEducationLevel())
+                    .build();
+            userRepository.save(student);
+        } else {
+            userRepository.save(user);
+        }
 
         log.info("User registered successfully: %s".formatted(request.getEmail()));
         return new RegisterResponse("User registered successfully: %s".formatted(request.getEmail()));
@@ -115,6 +131,7 @@ public class AuthenticationService {
                         .build());
     }
 
+    @Transactional
     public ResponseEntity<AuthenticationResponse> authenticateWithOtp(OtpAuthenticationRequest request) {
         log.info("Authenticating with OTP for email: {}", request.getEmail());
 
@@ -239,10 +256,5 @@ public class AuthenticationService {
                 .path("/api/auth/refresh")
                 .maxAge(7 * 24 * 60 * 60)
                 .build();
-    }
-
-    private String generateSecureToken() {
-        SecureRandom random = new SecureRandom();
-        return new BigInteger(130, random).toString(32);
     }
 }

@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.controller;
+package ro.ase.ism.dissertation.controller.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

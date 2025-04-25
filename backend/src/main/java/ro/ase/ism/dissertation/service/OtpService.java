@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.ase.ism.dissertation.model.otp.OneTimePassword;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
@@ -25,6 +26,7 @@ public class OtpService {
 
     private static final int OTP_EXPIRATION_MINUTES = 15;
 
+    @Transactional
     public void generateAndSendOtpsToUsersWithoutPassword() {
         List<User> usersWithoutPassword = userRepository.findAll().stream()
                 .filter(user -> user.getPassword() == null)

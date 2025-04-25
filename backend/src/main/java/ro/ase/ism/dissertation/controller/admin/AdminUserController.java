@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.controller;
+package ro.ase.ism.dissertation.controller.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ro.ase.ism.dissertation.auth.dto.RegisterRequest;
 import ro.ase.ism.dissertation.auth.dto.RegisterResponse;
 import ro.ase.ism.dissertation.auth.dto.UserDTO;
+import ro.ase.ism.dissertation.dto.studentgroup.StudentResponse;
+import ro.ase.ism.dissertation.model.course.EducationLevel;
 import ro.ase.ism.dissertation.service.AuthenticationService;
 import ro.ase.ism.dissertation.service.OtpService;
 import ro.ase.ism.dissertation.service.UserService;
@@ -16,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminUserController {
 
     private final AuthenticationService authService;
     private final OtpService otpService;
@@ -37,5 +39,18 @@ public class AdminController {
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getNonAdminUsers() {
         return ResponseEntity.ok(userService.getNonAdminUsers());
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(userService.getUser(userId));
+    }
+
+    @GetMapping("/students")
+    public ResponseEntity<List<StudentResponse>> getFilteredStudents(
+            @RequestParam(required = false, defaultValue = "false") Boolean unassignedOnly,
+            @RequestParam(required = false) EducationLevel educationLevel,
+            @RequestParam(required = false) Integer cohortId) {
+        return ResponseEntity.ok(userService.getFilteredStudents(educationLevel, cohortId, unassignedOnly));
     }
 }

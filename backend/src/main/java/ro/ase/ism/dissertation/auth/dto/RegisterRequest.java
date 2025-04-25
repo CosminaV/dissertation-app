@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import ro.ase.ism.dissertation.model.course.EducationLevel;
 import ro.ase.ism.dissertation.model.user.Role;
 
 @Data
@@ -25,4 +26,6 @@ public class RegisterRequest {
     private String email;
 
     private Role role;
+
+    private EducationLevel educationLevel;
 }

@@ -2,20 +2,21 @@ package ro.ase.ism.dissertation.model.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "_user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
