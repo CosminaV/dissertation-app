@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import NavbarAdmin from "../pages/NavbarAdmin";
+import NavbarAdmin from "../pages/admin/NavbarAdmin";
+import NavbarTeacher from "../pages/teacher/NavbarTeacher";
 import { useAuth } from "../context/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
@@ -34,8 +35,8 @@ const Navbar = () => {
     switch (role) {
         // case "STUDENT":
         //     return <NavbarStudent userName={userName} />;
-        // case "TEACHER":
-        //     return <NavbarTeacher userName={userName} />;
+        case "TEACHER":
+            return <NavbarTeacher userName={userName} />;
         case "ADMIN":
             return <NavbarAdmin userName={userName} />;
         default:

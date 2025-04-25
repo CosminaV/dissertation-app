@@ -1,0 +1,216 @@
+.group-page {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.group-page {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.group-page h3 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #1a3c40;
+    /*border-bottom: 2px solid #c7d2fe;*/
+    padding-bottom: 0.25rem;
+}
+
+.group-page h4 {
+    margin-top: 1.2rem;
+    font-size: 1.3rem;
+    color: #2f4858;
+    border-left: 4px solid #86b6f6;
+    padding-left: 0.5rem;
+}
+
+.group-page h5 {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #36454f;
+    font-weight: normal;
+    padding-left: 1rem;
+    font-style: italic;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.group-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+}
+
+.group-header button {
+    background-color: rgba(174, 208, 238, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.group-header button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.group-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.group-card {
+    background-color: #fffbea;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.group-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.group-card p {
+    font-size: 0.95rem;
+    color: #333;
+    margin: 0.2rem 0;
+}
+
+.group-detail {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.group-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+    margin: 0;
+}
+
+.group-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.group-header button {
+    background-color: rgba(174, 208, 238, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.group-header button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.group-header > div:last-child {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.course-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fffef5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.course-table th,
+.course-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.course-table th {
+    background-color: #f4f4f4;
+    color:#222831;
+}
+
+.student-list {
+    margin-top: 1rem;
+    padding-left: 1rem;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fffef5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.student-table th,
+.student-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.student-table th {
+    background-color: #f4f4f4;
+    color: #222831;
+}
+
+.remove-btn,
+.move-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+
+}
+.remove-btn {
+    color: #d62828;
+}
+
+.remove-btn:hover {
+    color: #a4161a;
+}
+
+.move-btn {
+    color: #577590;
+    margin-left: 0.5rem;
+}
+
+.move-btn:hover {
+    color: #1d3557;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.error {
+    color: #d62828;
+    font-size: 0.85rem;
+}

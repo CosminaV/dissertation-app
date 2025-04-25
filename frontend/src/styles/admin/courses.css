@@ -1,0 +1,108 @@
+.course-page {
+    padding: 2rem 3rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.course-page h3 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #1a3c40;
+    border-bottom: 2px solid #c7d2fe;
+    padding-bottom: 0.25rem;
+}
+
+.course-page h4 {
+    margin-top: 1.2rem;
+    font-size: 1.3rem;
+    color: #2f4858;
+    border-left: 4px solid #86b6f6;
+    padding-left: 0.5rem;
+}
+
+.course-page h5 {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #36454f;
+    font-weight: normal;
+    padding-left: 1rem;
+    font-style: italic;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.course-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+}
+
+.course-header button {
+    background-color: rgba(174, 208, 238, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.course-header button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.course-card {
+    background-color: #fffbea;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.course-card:hover {
+    transform: translateY(-2px);
+}
+
+.cohort-card strong {
+    display: block;
+    font-size: 1.2rem;
+    color: #222831;
+    margin-bottom: 0.5rem;
+}
+
+.course-card p {
+    font-size: 1rem;
+    margin: 0;
+    color: #333;
+}
+
+.course-card button {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    background-color: rgba(174, 208, 238, 0.9);
+    cursor: pointer;
+}
+
+.course-card button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.error {
+    color: #d62828;
+    font-size: 0.85rem;
+}

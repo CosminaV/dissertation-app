@@ -1,0 +1,67 @@
+.teacher-page {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.teacher-header {
+    margin-bottom: 1rem;
+}
+
+.teacher-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+}
+
+.teacher-page h3 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #1a3c40;
+    border-bottom: 2px solid #c7d2fe;
+    padding-bottom: 0.25rem;
+}
+
+.teacher-page h4 {
+    margin-top: 1.2rem;
+    font-size: 1.3rem;
+    color: #2f4858;
+    border-left: 4px solid #86b6f6;
+    padding-left: 0.5rem;
+}
+
+.teacher-page h5 {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #36454f;
+    font-weight: normal;
+    padding-left: 1rem;
+    font-style: italic;
+}
+
+.teacher-header p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.3rem 0;
+}
+
+.teacher-course-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background-color: #fffef5;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95rem;
+}
+
+.teacher-course-table th,
+.teacher-course-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.teacher-course-table th {
+    background-color: #f4f4f4;
+    color: #222831;
+    font-weight: bold;
+}

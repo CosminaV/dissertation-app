@@ -1,0 +1,52 @@
+.page-container {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+}
+
+.header button {
+    background-color: rgba(174, 208, 238, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.header button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.cohort-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.cohort-card {
+    background-color: #fffbea;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.cohort-card:hover {
+    transform: translateY(-2px);
+}
+
+.cohort-card strong {
+    font-size: 1.2rem;
+    color: #222831;
+}

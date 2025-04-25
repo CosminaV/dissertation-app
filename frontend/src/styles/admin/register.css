@@ -4,45 +4,8 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     transition: background-color 9999s ease-in-out 0s;
-    -webkit-text-fill-color: #222831!important;
-}
-
-.register-modal {
-    position: relative;
-    background-color: #fffbea;
-    border-radius: 12px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-    font-family: 'Segoe UI', sans-serif;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-}
-
-.register-title {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    color: #333;
-    text-align: center;
-}
-
-.register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.input-field {
-    padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    background-color: #fffff5;
-}
-
-.input-field:focus {
-    border-color: #f9c74f;
-    outline: none;
-    background-color: #fffde1;
+    -webkit-text-fill-color: #222831 !important;
+    box-sizing: border-box;
 }
 
 .submit-button {

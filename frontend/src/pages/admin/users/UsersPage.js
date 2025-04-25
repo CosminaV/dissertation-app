@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import api from "../api";
-import Register from "./Register";
-import '../styles/adminuserspage.css';
+import api from "../../../api";
+import RegisterForm from "../../../components/admin/RegisterForm";
+import "../../../styles/admin/userspage.css";
+import {useNavigate} from "react-router-dom";
 
-const AdminUsersPage = () => {
+const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [roleFilter, setRoleFilter] = useState("ALL");
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [showForm, setShowForm] = useState(false);
     const [sendingEmails, setSendingEmails] = useState(false);
+    const navigate = useNavigate();
 
     const fetchUsers = async () => {
         try {
@@ -16,6 +18,7 @@ const AdminUsersPage = () => {
             setUsers(response.data);
         } catch (error) {
             console.error("Failed to fetch users", error);
+            alert("Failed to fetch users");
         }
     };
 
@@ -76,23 +79,24 @@ const AdminUsersPage = () => {
             </div>
 
             {showForm && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <Register
-                            onSuccess={() => {
-                                fetchUsers();
-                                setShowForm(false);
-                            }}
-                            onClose={() => setShowForm(false)}
-                        />
-                    </div>
-                </div>
+                <RegisterForm
+                    onSuccess={() => {
+                        fetchUsers();
+                        setShowForm(false);
+                    }}
+                    onClose={() => setShowForm(false)}
+                />
             )}
 
 
             <div className="user-list">
                 {filteredUsers.map((user) => (
-                    <div className="user-card" key={user.id}>
+                    <div className={`user-card ${user.role === "TEACHER" ? "clickable-teacher" : ""}`} key={user.id}
+                        onClick={() => {
+                            if (user.role === "TEACHER") {
+                                navigate(`/admin/teachers/${user.id}`, { state: { teacher: user } });
+                            }
+                        }}>
                         <strong>{user.firstName} {user.lastName}</strong>
                         <p>{user.email}</p>
                         <span className={`role-tag ${user.role.toLowerCase()}`}>{user.role}</span>
@@ -106,4 +110,4 @@ const AdminUsersPage = () => {
     );
 };
 
-export default AdminUsersPage;
+export default UsersPage;
