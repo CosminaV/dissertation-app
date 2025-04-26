@@ -33,6 +33,8 @@
 		<sendgrid.version>4.10.3</sendgrid.version>
 		<spring-cloud.version>2023.0.1</spring-cloud.version>
 		<dotenv-java.version>3.0.0</dotenv-java.version>
+		<minio.version>8.5.12</minio.version>
+		<pdfbox.version>3.0.3</pdfbox.version>
 	</properties>
 
 	<dependencies>
@@ -89,7 +91,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -106,6 +107,18 @@
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
 			<version>${dotenv-java.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.minio</groupId>
+			<artifactId>minio</artifactId>
+			<version>${minio.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
 
 	</dependencies>
