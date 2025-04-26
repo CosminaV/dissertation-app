@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 "/api/auth/refresh").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/teacher/**").hasAuthority("TEACHER")
                         .anyRequest()
                         .authenticated()
                 ).userDetailsService(userDetailsService)

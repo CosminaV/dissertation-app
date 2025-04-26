@@ -3,13 +3,14 @@ spring:
     name: gradus
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    defer-datasource-initialization: true
   config:
     import: vault://
   cloud:
@@ -28,6 +29,11 @@ spring:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 6MB
 #  sql:
 #    init:
 #      mode: always
@@ -38,3 +44,13 @@ jwt:
   refresh-token-expiration: 604800000
 #  access-token-expiration: 30000
 #  refresh-token-expiration: 5000
+
+minio:
+  url: ${minio.url}
+  accessKey: ${minio.accessKey}
+  secretKey: ${minio.secretKey}
+  bucketName: ${minio.bucketName}
+
+watermarking:
+  enc:
+    secret: ${watermarking.enc.secret}
