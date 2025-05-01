@@ -15,6 +15,8 @@ import CourseListPage from "./pages/admin/courses/CourseListPage";
 import CourseCohortsPage from "./pages/admin/course-cohorts/CourseCohortsPage";
 import TeacherPage from "./pages/admin/users/TeacherPage";
 import TeacherCoursesPage from "./pages/teacher/courses/TeacherCoursesPage";
+import TeacherCourseGroupDetailPage from "./pages/teacher/courses/TeacherCourseGroupDetailPage";
+import TeacherCourseCohortDetailPage from "./pages/teacher/courses/TeacherCourseCohortDetailPage";
 const App = () => {
   return (
       <Router>
@@ -34,6 +36,8 @@ const App = () => {
                 <Route path="/admin/teachers/:id" element={<PrivateRoute allowedRoles={["ADMIN"]}><TeacherPage /></PrivateRoute>} />
 
                 <Route path="/teacher/courses" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCoursesPage /></PrivateRoute>} />
+                <Route path="/teacher/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseGroupDetailPage /></PrivateRoute>} />
+                <Route path="/teacher/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseCohortDetailPage/></PrivateRoute>} />
 
                 <Route path="/set-password" element={<SetPasswordPage />} />
                 <Route path="/forbidden" element={<Forbidden />} />

@@ -52,6 +52,23 @@
     background-color: #fffde1;
 }
 
+.modal-content textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fffff5;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.modal-content textarea:focus {
+    border-color: #f9c74f;
+    outline: none;
+    background-color: #fffde1;
+}
+
 .modal-buttons {
     display: flex;
     justify-content: space-between;
