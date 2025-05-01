@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.model.course;
+package ro.ase.ism.dissertation.model.material;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import ro.ase.ism.dissertation.model.course.CourseGroup;
+import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
 import ro.ase.ism.dissertation.model.user.User;
 
 import java.time.LocalDateTime;
@@ -39,10 +41,17 @@ public class Material {
     private LocalDateTime lastUpdatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "course_group_id", nullable = false)
+    @JoinColumn(name = "course_group_id")
     private CourseGroup courseGroup;
+
+    @ManyToOne
+    @JoinColumn(name = "course_cohort_id")
+    private CourseCohort courseCohort;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher;
+
+    private String originalFileName;
+    private String contentType;
 }
