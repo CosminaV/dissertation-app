@@ -1,14 +1,17 @@
-package ro.ase.ism.dissertation.service;
+package ro.ase.ism.dissertation.service.teacher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.ase.ism.dissertation.dto.coursegroup.TeacherCourseInfoResponse;
 import ro.ase.ism.dissertation.dto.teacher.TeacherCourseAssignmentResponse;
 import ro.ase.ism.dissertation.exception.EntityNotFoundException;
 import ro.ase.ism.dissertation.exception.InvalidAssignmentException;
 import ro.ase.ism.dissertation.model.course.Course;
+import ro.ase.ism.dissertation.model.course.CourseGroup;
 import ro.ase.ism.dissertation.model.course.StudentGroup;
+import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
 import ro.ase.ism.dissertation.model.user.Role;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.CourseCohortRepository;
@@ -30,6 +33,7 @@ public class TeacherService {
     private final UserRepository userRepository;
     private final CourseGroupRepository courseGroupRepository;
     private final CourseCohortRepository courseCohortRepository;
+    private final TeacherAccessService teacherAccessService;
 
     @Transactional(readOnly = true)
     public List<TeacherCourseAssignmentResponse> getTeacherCourses(Integer teacherId) {
@@ -70,6 +74,7 @@ public class TeacherService {
                                     .yearOfStudy(group.getYearOfStudy())
                                     .role("PRACTICAL")
                                     .target(group.getName())
+                                    .targetId(cg.getId())
                                     .build();
                         })
                         .toList();
@@ -85,6 +90,7 @@ public class TeacherService {
                                 .yearOfStudy(cc.getCourse().getYearOfStudy())
                                 .role("LECTURE")
                                 .target(cc.getCohort().getName())
+                                .targetId(cc.getId())
                                 .build())
                         .toList();
 
@@ -111,5 +117,33 @@ public class TeacherService {
                 .sorted(Comparator.reverseOrder()) // newest first
                 .map(FormatUtils::formatAcademicYear)
                 .toList();
+    }
+
+    public TeacherCourseInfoResponse getCourseGroupInfo(Integer courseGroupId, Integer teacherId) {
+        CourseGroup courseGroup = courseGroupRepository.findById(courseGroupId)
+                .orElseThrow(() -> new EntityNotFoundException("Course group not found"));
+
+        teacherAccessService.validateTeacherAccessToCourseGroup(courseGroup, teacherId);
+
+        return TeacherCourseInfoResponse.builder()
+                .courseName(courseGroup.getCourse().getName())
+                .academicYear(FormatUtils.formatAcademicYear(courseGroup.getAcademicYear()))
+                .target(courseGroup.getStudentGroup().getName() + courseGroup.getStudentGroup().getCohort().getName())
+                .role("PRACTICAL")
+                .build();
+    }
+
+    public TeacherCourseInfoResponse getCourseCohortInfo(Integer courseCohortId, Integer teacherId) {
+        CourseCohort courseCohort = courseCohortRepository.findById(courseCohortId)
+                .orElseThrow(() -> new EntityNotFoundException("Course group not found"));
+
+        teacherAccessService.validateTeacherAccessToCourseCohort(courseCohort, teacherId);
+
+        return TeacherCourseInfoResponse.builder()
+                .courseName(courseCohort.getCourse().getName())
+                .academicYear(FormatUtils.formatAcademicYear(courseCohort.getAcademicYear()))
+                .target(courseCohort.getCohort().getName())
+                .role("LECTURE")
+                .build();
     }
 }

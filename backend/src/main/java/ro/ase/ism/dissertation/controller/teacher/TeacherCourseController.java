@@ -3,14 +3,15 @@ package ro.ase.ism.dissertation.controller.teacher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ro.ase.ism.dissertation.dto.coursegroup.TeacherCourseInfoResponse;
 import ro.ase.ism.dissertation.dto.teacher.TeacherCourseAssignmentResponse;
 import ro.ase.ism.dissertation.model.user.User;
-import ro.ase.ism.dissertation.service.TeacherService;
+import ro.ase.ism.dissertation.service.teacher.TeacherService;
 
 import java.util.List;
 
@@ -32,5 +33,21 @@ public class TeacherCourseController {
     public ResponseEntity<List<String>> getAcademicYears(@AuthenticationPrincipal User user) {
         log.info("Get academic years");
         return ResponseEntity.ok(teacherService.getTeacherAcademicYears(user.getId()));
+    }
+
+    @GetMapping("/course-groups/{courseGroupId}")
+    public ResponseEntity<TeacherCourseInfoResponse> getCourseGroupInfo(
+            @PathVariable Integer courseGroupId,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(teacherService.getCourseGroupInfo(courseGroupId, user.getId()));
+    }
+
+    @GetMapping("/course-cohorts/{courseCohortId}")
+    public ResponseEntity<TeacherCourseInfoResponse> getCourseCohortInfo(
+            @PathVariable Integer courseCohortId,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(teacherService.getCourseCohortInfo(courseCohortId, user.getId()));
     }
 }

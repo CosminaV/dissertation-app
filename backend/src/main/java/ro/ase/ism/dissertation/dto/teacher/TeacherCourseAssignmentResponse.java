@@ -19,4 +19,5 @@ public class TeacherCourseAssignmentResponse {
     private Integer semester;
     private String role; // "LECTURE" or "PRACTICAL"
     private String target; // cohort name (for lecture) or student group name (for practical)
+    private Integer targetId; // id of either the courseCohort or the courseGroup
 }
