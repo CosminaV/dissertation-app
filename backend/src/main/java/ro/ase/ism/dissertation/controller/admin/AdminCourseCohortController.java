@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ro.ase.ism.dissertation.dto.coursecohort.AssignCourseCohortRequest;
 import ro.ase.ism.dissertation.dto.coursecohort.CourseCohortResponse;
-import ro.ase.ism.dissertation.service.AdminCourseCohortService;
+import ro.ase.ism.dissertation.service.admin.AdminCourseCohortService;
 
 import java.util.List;
 

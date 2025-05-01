@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import ro.ase.ism.dissertation.dto.coursegroup.AssignCourseGroupRequest;
 import ro.ase.ism.dissertation.dto.coursegroup.CourseGroupResponse;
 import ro.ase.ism.dissertation.dto.coursegroup.CourseGroupTeachersResponse;
-import ro.ase.ism.dissertation.service.AdminCourseGroupService;
+import ro.ase.ism.dissertation.service.admin.AdminCourseGroupService;
 
 @RestController
 @RequestMapping("/api/admin/course-groups")
 @RequiredArgsConstructor
 public class AdminCourseGroupController {
-
 
     private final AdminCourseGroupService adminCourseGroupService;
 

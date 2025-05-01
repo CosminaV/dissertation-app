@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.ase.ism.dissertation.dto.course.CourseRequest;
 import ro.ase.ism.dissertation.dto.course.CourseResponse;
 import ro.ase.ism.dissertation.dto.coursecohort.CourseCohortResponse;
-import ro.ase.ism.dissertation.service.AdminCourseService;
+import ro.ase.ism.dissertation.service.admin.AdminCourseService;
 
 import java.util.List;
 

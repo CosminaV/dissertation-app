@@ -9,7 +9,7 @@ import ro.ase.ism.dissertation.dto.studentgroup.AssignStudentsToGroupRequest;
 import ro.ase.ism.dissertation.dto.studentgroup.StudentGroupRequest;
 import ro.ase.ism.dissertation.dto.studentgroup.StudentGroupResponse;
 import ro.ase.ism.dissertation.dto.studentgroup.StudentResponse;
-import ro.ase.ism.dissertation.service.AdminStudentGroupService;
+import ro.ase.ism.dissertation.service.admin.AdminStudentGroupService;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.service;
+package ro.ase.ism.dissertation.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

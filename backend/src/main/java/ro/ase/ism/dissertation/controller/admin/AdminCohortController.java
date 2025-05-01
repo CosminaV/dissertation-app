@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.ase.ism.dissertation.dto.cohort.CohortRequest;
 import ro.ase.ism.dissertation.dto.cohort.CohortResponse;
-import ro.ase.ism.dissertation.service.AdminCohortService;
+import ro.ase.ism.dissertation.service.admin.AdminCohortService;
 
 import java.util.List;
 
