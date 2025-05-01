@@ -22,6 +22,6 @@ public class MaterialResponse {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime lastUpdatedAt;
     private String courseName;
-    private String studentGroupName;
+    private String targetName;
     private String uploadedBy;
 }

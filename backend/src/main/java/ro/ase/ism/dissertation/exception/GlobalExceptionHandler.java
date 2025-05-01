@@ -1,6 +1,8 @@
 package ro.ase.ism.dissertation.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -100,6 +102,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(MissingTargetException.class)
+    public ResponseEntity<ErrorResponse> handleMissingTarget(MissingTargetException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Uploaded file is too large. Max allowed size is 5MB.");
@@ -126,6 +135,19 @@ public class GlobalExceptionHandler {
 
         response.put("errors", errors);
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            String fieldName = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            errors.put(fieldName, message);
+        }
+
+        return ResponseEntity.badRequest().body(Map.of("errors", errors));
     }
 
     //not used because of spring security => created authentication entry point

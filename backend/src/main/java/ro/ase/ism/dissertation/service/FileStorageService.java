@@ -6,8 +6,6 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.StatObjectArgs;
-import io.minio.StatObjectResponse;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -17,6 +15,7 @@ import io.minio.errors.XmlParserException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +53,8 @@ public class FileStorageService {
 
     public String uploadFile(String prefix, MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
-        String objectKey = prefix + "/" + UUID.randomUUID() + "-" + originalFilename;
+        String extension = FilenameUtils.getExtension(originalFilename);
+        String objectKey = prefix + "/" + UUID.randomUUID() + "." + extension;
 
         try (InputStream stream = file.getInputStream()) {
             minioClient.putObject(
@@ -103,25 +103,5 @@ public class FileStorageService {
                  InvalidResponseException e) {
             throw new RuntimeException("Failed to delete file", e);
         }
-    }
-
-    public String getContentType(String objectKey) {
-        try {
-            StatObjectResponse stat = minioClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(objectKey)
-                            .build()
-            );
-            return stat.contentType();
-        } catch (ServerException | InsufficientDataException | IOException | NoSuchAlgorithmException |
-                 InvalidKeyException | XmlParserException | InternalException | ErrorResponseException |
-                 InvalidResponseException e) {
-            throw new RuntimeException("Failed to get content type", e);
-        }
-    }
-
-    public String extractOriginalFileName(String objectKey) {
-        return objectKey.substring(objectKey.lastIndexOf('-') + 1);
     }
 }

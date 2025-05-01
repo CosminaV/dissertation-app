@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.ase.ism.dissertation.model.cohort.Cohort;
 import ro.ase.ism.dissertation.model.course.Course;
+import ro.ase.ism.dissertation.model.material.Material;
 import ro.ase.ism.dissertation.model.user.User;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -34,4 +37,7 @@ public class CourseCohort {
     @ManyToOne
     @JoinColumn(name = "lecture_teacher_id", nullable = false)
     private User lectureTeacher;
+
+    @OneToMany(mappedBy = "courseCohort")
+    private List<Material> materials;
 }

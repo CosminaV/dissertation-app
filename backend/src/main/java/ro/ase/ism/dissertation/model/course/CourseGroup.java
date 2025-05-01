@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.ase.ism.dissertation.model.homework.Homework;
+import ro.ase.ism.dissertation.model.material.Material;
 import ro.ase.ism.dissertation.model.user.User;
 
 import java.util.List;

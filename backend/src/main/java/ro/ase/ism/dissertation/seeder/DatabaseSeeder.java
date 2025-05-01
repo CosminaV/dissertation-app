@@ -260,14 +260,14 @@ public class DatabaseSeeder implements CommandLineRunner {
         ).stream().map(courseRepository::save).toList();
 
         // 5. Course Cohorts
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(0), cohortA, teachers.get(0)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(1), cohortA, teachers.get(1)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(2), cohortB, teachers.get(2)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(3), cohortB, teachers.get(3)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(4), cohortB, teachers.get(4)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(5), cohortB, teachers.get(5)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(6), cohortC, teachers.get(6)));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(7), cohortC, teachers.get(7)));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(0), cohortA, teachers.get(0), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(1), cohortA, teachers.get(1), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(2), cohortB, teachers.get(2), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(3), cohortB, teachers.get(3), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(4), cohortB, teachers.get(4), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(5), cohortB, teachers.get(5), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(6), cohortC, teachers.get(6), null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(7), cohortC, teachers.get(7), null));
 
         // 6. Course Groups
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1010, teachers.get(1), null, null));
