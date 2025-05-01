@@ -2,6 +2,7 @@ package ro.ase.ism.dissertation.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
@@ -27,5 +28,6 @@ public class RegisterRequest {
 
     private Role role;
 
+    @NotNull(message = "Education level is required")
     private EducationLevel educationLevel;
 }
