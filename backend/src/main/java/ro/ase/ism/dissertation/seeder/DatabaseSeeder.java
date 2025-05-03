@@ -13,17 +13,19 @@ import ro.ase.ism.dissertation.model.course.StudentGroup;
 import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
 import ro.ase.ism.dissertation.model.user.Role;
 import ro.ase.ism.dissertation.model.user.Student;
+import ro.ase.ism.dissertation.model.user.StudentEnrollment;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.CohortRepository;
 import ro.ase.ism.dissertation.repository.CourseCohortRepository;
 import ro.ase.ism.dissertation.repository.CourseGroupRepository;
 import ro.ase.ism.dissertation.repository.CourseRepository;
+import ro.ase.ism.dissertation.repository.StudentEnrollmentRepository;
 import ro.ase.ism.dissertation.repository.StudentGroupRepository;
 import ro.ase.ism.dissertation.repository.StudentRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final CourseRepository courseRepository;
     private final CourseCohortRepository courseCohortRepository;
     private final CourseGroupRepository courseGroupRepository;
+    private final StudentEnrollmentRepository studentEnrollmentRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -44,17 +47,18 @@ public class DatabaseSeeder implements CommandLineRunner {
         String password = passwordEncoder.encode("GoodPassword1234!");
 
         // 1. Cohorts
-        Cohort cohortA = cohortRepository.save(new Cohort(null, "A", null, null));
-        Cohort cohortB = cohortRepository.save(new Cohort(null, "B", null, null));
-        Cohort cohortC = cohortRepository.save(new Cohort(null, "C", null, null));
+        Cohort cohortA = cohortRepository.save(new Cohort(null, "A", EducationLevel.BACHELOR, null, null));
+        Cohort cohortB = cohortRepository.save(new Cohort(null, "B", EducationLevel.BACHELOR, null, null));
+        Cohort cohortC = cohortRepository.save(new Cohort(null, "C", EducationLevel.MASTER, null, null));
+        Cohort cohortD = cohortRepository.save(new Cohort(null, "D", EducationLevel.PHD, null, null));
 
         // 2. Student Groups
         StudentGroup g1010 = studentGroupRepository.save(new StudentGroup(null, "1010", 1, EducationLevel.BACHELOR, null, null, cohortA));
         StudentGroup g1011 = studentGroupRepository.save(new StudentGroup(null, "1011", 1, EducationLevel.BACHELOR, null, null, cohortA));
-        StudentGroup g1020 = studentGroupRepository.save(new StudentGroup(null, "1020", 2, EducationLevel.BACHELOR, null, null, cohortA));
-        StudentGroup g1030 = studentGroupRepository.save(new StudentGroup(null, "1030", 3, EducationLevel.BACHELOR, null, null, cohortA));
-        StudentGroup g1100 = studentGroupRepository.save(new StudentGroup(null, "1100", 1, EducationLevel.MASTER, null, null, cohortB));
-        StudentGroup g1200 = studentGroupRepository.save(new StudentGroup(null, "1200", 1, EducationLevel.PHD, null, null, cohortC));
+        StudentGroup g1020 = studentGroupRepository.save(new StudentGroup(null, "1020", 2, EducationLevel.BACHELOR, null, null, cohortB));
+        StudentGroup g1021 = studentGroupRepository.save(new StudentGroup(null, "1021", 2, EducationLevel.BACHELOR, null, null, cohortB));
+        StudentGroup g1030 = studentGroupRepository.save(new StudentGroup(null, "1030", 1, EducationLevel.MASTER, null, null, cohortC));
+        StudentGroup g1200 = studentGroupRepository.save(new StudentGroup(null, "1200", 1, EducationLevel.PHD, null, null, cohortD));
 
         // 3. Users (Students + Teachers)
         User teacher1 = User.builder()
@@ -201,7 +205,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .password(password)
                 .role(Role.STUDENT)
                 .educationLevel(EducationLevel.BACHELOR)
-                .studentGroup(g1020)
+                .studentGroup(g1021)
                 .build();
 
         Student s9 = Student.builder()
@@ -211,7 +215,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .password(password)
                 .role(Role.STUDENT)
                 .educationLevel(EducationLevel.BACHELOR)
-                .studentGroup(g1030)
+                .studentGroup(g1021)
                 .build();
 
         Student s10 = Student.builder()
@@ -221,7 +225,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .password(password)
                 .role(Role.STUDENT)
                 .educationLevel(EducationLevel.BACHELOR)
-                .studentGroup(g1030)
+                .studentGroup(g1021)
                 .build();
 
         Student s11 = Student.builder()
@@ -231,7 +235,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .password(password)
                 .role(Role.STUDENT)
                 .educationLevel(EducationLevel.BACHELOR)
-                .studentGroup(g1030)
+                .studentGroup(g1021)
                 .build();
 
         Student s12 = Student.builder()
@@ -241,10 +245,76 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .password(password)
                 .role(Role.STUDENT)
                 .educationLevel(EducationLevel.BACHELOR)
-                .studentGroup(g1030)
+                .studentGroup(g1020)
                 .build();
 
         studentRepository.saveAll(List.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
+
+        List<StudentEnrollment> enrollments = new ArrayList<>();
+
+        // Academic year 2023 enrollments (historical)
+        enrollments.add(StudentEnrollment.builder()
+                .student(s12)
+                .academicYear(2023)
+                .educationLevel(EducationLevel.BACHELOR)
+                .yearOfStudy(1)
+                .cohort(cohortA)
+                .studentGroup(g1010)
+                .build());
+
+        enrollments.add(StudentEnrollment.builder()
+                .student(s7)
+                .academicYear(2023)
+                .educationLevel(EducationLevel.BACHELOR)
+                .yearOfStudy(1)
+                .cohort(cohortA)
+                .studentGroup(g1011)
+                .build());
+
+        // Academic year 2024 enrollments
+        for (Student student : List.of(s7, s12)) {
+            enrollments.add(StudentEnrollment.builder()
+                    .student(student)
+                    .academicYear(2024)
+                    .educationLevel(EducationLevel.BACHELOR)
+                    .yearOfStudy(2)
+                    .cohort(cohortB)
+                    .studentGroup(g1020)
+                    .build());
+        }
+        for (Student student : List.of(s1, s2, s3, s4)) {
+            enrollments.add(StudentEnrollment.builder()
+                    .student(student)
+                    .academicYear(2024)
+                    .educationLevel(EducationLevel.BACHELOR)
+                    .yearOfStudy(1)
+                    .cohort(cohortA)
+                    .studentGroup(g1010)
+                    .build());
+        }
+        for (Student student : List.of(s5, s6)) {
+            enrollments.add(StudentEnrollment.builder()
+                    .student(student)
+                    .academicYear(2024)
+                    .educationLevel(EducationLevel.BACHELOR)
+                    .yearOfStudy(1)
+                    .cohort(cohortA)
+                    .studentGroup(g1011)
+                    .build());
+        }
+
+        for (Student student : List.of(s8, s9, s10, s11)) {
+            enrollments.add(StudentEnrollment.builder()
+                    .student(student)
+                    .academicYear(2024)
+                    .educationLevel(EducationLevel.BACHELOR)
+                    .yearOfStudy(2)
+                    .cohort(cohortA)
+                    .studentGroup(g1021)
+                    .build());
+        }
+        studentEnrollmentRepository.saveAll(enrollments);
+
         // 4. Courses
         List<Course> courses = List.of(
                 new Course(null, "Intro to Java", 1, 1, EducationLevel.BACHELOR, null, null, null),
@@ -260,6 +330,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         ).stream().map(courseRepository::save).toList();
 
         // 5. Course Cohorts
+        courseCohortRepository.save(new CourseCohort(null, 2023, courses.get(0), cohortA, teachers.get(0), null));
         courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(0), cohortA, teachers.get(0), null));
         courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(1), cohortA, teachers.get(1), null));
         courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(2), cohortB, teachers.get(2), null));
@@ -270,14 +341,16 @@ public class DatabaseSeeder implements CommandLineRunner {
         courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(7), cohortC, teachers.get(7), null));
 
         // 6. Course Groups
+        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1010, teachers.get(1), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1011, teachers.get(3), null, null));
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1010, teachers.get(1), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(1), g1010, teachers.get(3), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1011, teachers.get(3), null, null));
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(2), g1020, teachers.get(4), null, null));
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(3), g1020, teachers.get(5), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(4), g1030, teachers.get(6), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(5), g1030, teachers.get(7), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(6), g1100, teachers.get(0), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(7), g1100, teachers.get(1), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(4), g1021, teachers.get(6), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(5), g1021, teachers.get(7), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(6), g1030, teachers.get(0), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(7), g1030, teachers.get(1), null, null));
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(8), g1200, teachers.get(2), null, null));
         courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(9), g1200, teachers.get(3), null, null));
 
