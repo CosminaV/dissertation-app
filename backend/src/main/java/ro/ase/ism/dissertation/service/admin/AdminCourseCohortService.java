@@ -2,6 +2,7 @@ package ro.ase.ism.dissertation.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ase.ism.dissertation.dto.coursecohort.AssignCourseCohortRequest;
@@ -19,6 +20,7 @@ import ro.ase.ism.dissertation.repository.CourseCohortRepository;
 import ro.ase.ism.dissertation.repository.CourseRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 import ro.ase.ism.dissertation.utils.FormatUtils;
+import ro.ase.ism.dissertation.utils.ValidationUtils;
 
 import java.util.List;
 
@@ -49,7 +51,11 @@ public class AdminCourseCohortService {
 
         boolean alreadyAssigned = courseCohortRepository.existsByCourseAndCohortAndAcademicYear(course, cohort, request.getAcademicYear());
         if (alreadyAssigned) {
-            throw new ConflictException("This course is already assigned to this cohort");
+            throw new ConflictException("This course is already assigned to this cohort in this academic year");
+        }
+
+        if (request.getAcademicYear() < ValidationUtils.getCurrentAcademicYear()) {
+            throw new AccessDeniedException("Cannot assign course cohort to a past academic year");
         }
 
         log.info("Creating course cohort");
