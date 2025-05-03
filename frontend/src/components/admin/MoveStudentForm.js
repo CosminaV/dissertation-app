@@ -31,7 +31,7 @@ const MoveStudentForm = ({ student, currentGroupId, educationLevel, onClose, onS
             onSuccess();
         } catch (err) {
             console.error("Failed to move student", err);
-            alert("Could not move the student.: " + err.response.data.error);
+            alert("Could not move the student: " + err.response.data.error);
         }
     };
 
