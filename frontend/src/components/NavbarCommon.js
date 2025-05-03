@@ -2,22 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/navbar.css";
 import GradusLogo from "../assets/gradus-logo.svg";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import api from "../api";
 
 const NavbarCommon = ({ children, userName }) => {
-    const navigate = useNavigate();
     const { logout } = useAuth();
 
     const handleLogout = async () => {
         try {
-            await api.post("/auth/logout");
+            logout();
         } catch (e) {
             console.error("Logout failed", e);
-        } finally {
-            logout();
-            navigate("/login");
         }
     };
 
