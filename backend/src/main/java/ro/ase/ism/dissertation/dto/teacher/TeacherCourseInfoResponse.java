@@ -1,4 +1,4 @@
-package ro.ase.ism.dissertation.dto.coursegroup;
+package ro.ase.ism.dissertation.dto.teacher;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

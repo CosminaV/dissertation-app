@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ro.ase.ism.dissertation.dto.coursegroup.TeacherCourseInfoResponse;
+import ro.ase.ism.dissertation.dto.teacher.TeacherCourseInfoResponse;
 import ro.ase.ism.dissertation.dto.teacher.TeacherCourseAssignmentResponse;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.service.teacher.TeacherService;
