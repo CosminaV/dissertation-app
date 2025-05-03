@@ -37,7 +37,7 @@ const CourseListPage = () => {
 
     return (
         <div className="course-page">
-            <div className="course-header">
+            <div className="admin-course-header">
                 <h2>Courses</h2>
                 <button onClick={() => setShowForm(true)}>+ Add New Course</button>
             </div>

@@ -7,8 +7,7 @@
     margin-top: 2rem;
     font-size: 1.5rem;
     color: #1a3c40;
-    border-bottom: 2px solid #c7d2fe;
-    padding-bottom: 0.25rem;
+    text-align: left;
 }
 
 .course-page h4 {
@@ -17,6 +16,7 @@
     color: #2f4858;
     border-left: 4px solid #86b6f6;
     padding-left: 0.5rem;
+    text-align: left;
 }
 
 .course-page h5 {
@@ -26,18 +26,20 @@
     font-weight: normal;
     padding-left: 1rem;
     font-style: italic;
+    text-align: left;
 }
 
-.course-header {
+.admin-course-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
 }
 
-.course-header h2 {
+.admin-course-header h2 {
     font-size: 1.8rem;
     color: #222831;
+    margin: 0;
 }
 
 .course-header button {
@@ -47,6 +49,7 @@
     padding: 0.6rem 1rem;
     font-weight: bold;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .course-header button:hover {
@@ -57,6 +60,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1rem;
+    justify-items: stretch;
+    text-align: left;
 }
 
 .course-card {
@@ -75,11 +80,9 @@
     transform: translateY(-2px);
 }
 
-.cohort-card strong {
-    display: block;
-    font-size: 1.2rem;
+.course-card strong {
+    font-size: 1.1rem;
     color: #222831;
-    margin-bottom: 0.5rem;
 }
 
 .course-card p {
