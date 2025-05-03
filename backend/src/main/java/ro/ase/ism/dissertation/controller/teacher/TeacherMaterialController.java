@@ -42,14 +42,14 @@ public class TeacherMaterialController {
 
     @GetMapping("/course-groups/{courseGroupId}/materials")
     public ResponseEntity<List<MaterialResponse>> getMaterialsForCourseGroup(
-            @PathVariable int courseGroupId,
+            @PathVariable Integer courseGroupId,
             @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teacherMaterialService.getMaterialsForCourseGroup(courseGroupId, user.getId()));
     }
 
     @GetMapping("/course-cohorts/{courseCohortId}/materials")
     public ResponseEntity<List<MaterialResponse>> getMaterialsForCourseCohort(
-            @PathVariable int courseCohortId,
+            @PathVariable Integer courseCohortId,
             @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teacherMaterialService.getMaterialsForCourseCohort(courseCohortId, user.getId()));
     }
