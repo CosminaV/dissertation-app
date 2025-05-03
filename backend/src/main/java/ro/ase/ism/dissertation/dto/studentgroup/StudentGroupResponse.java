@@ -1,5 +1,6 @@
 package ro.ase.ism.dissertation.dto.studentgroup;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +13,13 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class StudentGroupResponse {
     private Integer id;
     private String name;
     private Integer yearOfStudy;
     private EducationLevel educationLevel;
+    private String academicYear;
     private String cohortName;
     private List<StudentSummary> students;
 
