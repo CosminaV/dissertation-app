@@ -8,7 +8,6 @@ import ro.ase.ism.dissertation.dto.coursegroup.CourseGroupResponse;
 import ro.ase.ism.dissertation.dto.studentgroup.AssignStudentsToGroupRequest;
 import ro.ase.ism.dissertation.dto.studentgroup.StudentGroupRequest;
 import ro.ase.ism.dissertation.dto.studentgroup.StudentGroupResponse;
-import ro.ase.ism.dissertation.dto.studentgroup.StudentResponse;
 import ro.ase.ism.dissertation.service.admin.AdminStudentGroupService;
 
 import java.util.List;
@@ -27,13 +26,20 @@ public class AdminStudentGroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StudentGroupResponse>> getAllStudentGroups() {
-        return ResponseEntity.ok(adminStudentGroupService.getAllStudentGroups());
+    public ResponseEntity<List<StudentGroupResponse>> getStudentGroups(@RequestParam(required = false) Integer academicYear) {
+        return ResponseEntity.ok(adminStudentGroupService.getStudentGroupsByAcademicYear(academicYear));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<StudentGroupResponse> getStudentGroupById(@PathVariable Integer id) {
-        return ResponseEntity.ok(adminStudentGroupService.getGroupById(id));
+    @GetMapping("/academic-years")
+    public ResponseEntity<List<String>> getAllAcademicYears() {
+        return ResponseEntity.ok(adminStudentGroupService.getAllAcademicYears());
+    }
+
+    @GetMapping("/{groupId}")
+    public ResponseEntity<StudentGroupResponse> getStudentGroupById(
+            @PathVariable Integer groupId,
+            @RequestParam(required = false) Integer academicYear) {
+        return ResponseEntity.ok(adminStudentGroupService.getStudentGroupByIdAndAcademicYear(groupId, academicYear));
     }
 
     @PostMapping("/{groupId}/assign-students")
@@ -58,15 +64,11 @@ public class AdminStudentGroupController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{groupId}/students")
-    public ResponseEntity<List<StudentResponse>> getStudentsInGroup(@PathVariable Integer groupId) {
-        List<StudentResponse> students = adminStudentGroupService.getStudentsInGroup(groupId);
-        return ResponseEntity.ok(students);
-    }
-
     @GetMapping("/{groupId}/courses")
-    public ResponseEntity<List<CourseGroupResponse>> getCoursesForStudentGroup(@PathVariable Integer groupId) {
-        List<CourseGroupResponse> courses = adminStudentGroupService.getCoursesForStudentGroup(groupId);
+    public ResponseEntity<List<CourseGroupResponse>> getCoursesForStudentGroup(
+            @PathVariable Integer groupId,
+            @RequestParam(required = false) Integer academicYear) {
+        List<CourseGroupResponse> courses = adminStudentGroupService.getCoursesForStudentGroup(groupId, academicYear);
         return ResponseEntity.ok(courses);
     }
 }

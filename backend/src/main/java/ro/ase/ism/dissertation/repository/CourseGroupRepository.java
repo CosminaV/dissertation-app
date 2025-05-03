@@ -16,4 +16,6 @@ public interface CourseGroupRepository extends JpaRepository<CourseGroup, Intege
     List<CourseGroup> findByPracticalTeacher(User practicalTeacher);
     @Query("SELECT DISTINCT cg.academicYear FROM CourseGroup cg WHERE cg.practicalTeacher.id = :teacherId")
     List<Integer> findAcademicYearsByPracticalTeacherId(@Param("teacherId")Integer teacherId);
+    boolean existsByStudentGroupAndAcademicYear(StudentGroup studentGroup, Integer academicYear);
+    List<CourseGroup> findByStudentGroupAndAcademicYear(StudentGroup studentGroup, Integer academicYear);
 }

@@ -18,4 +18,6 @@ public interface CourseCohortRepository extends JpaRepository<CourseCohort, Inte
     List<CourseCohort> findByCourse(Course course);
     @Query("SELECT DISTINCT cc.academicYear FROM CourseCohort cc WHERE cc.lectureTeacher.id = :teacherId")
     List<Integer> findAcademicYearsByLectureTeacherId(@Param("teacherId") Integer teacherId);
+    boolean existsByCohortAndAcademicYear(Cohort cohort, Integer academicYear);
+    List<CourseCohort> findByCohortAndAcademicYear(Cohort cohort, Integer academicYear);
 }
