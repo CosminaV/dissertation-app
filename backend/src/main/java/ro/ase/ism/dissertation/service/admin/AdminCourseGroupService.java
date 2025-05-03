@@ -2,6 +2,7 @@ package ro.ase.ism.dissertation.service.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.ase.ism.dissertation.dto.coursegroup.AssignCourseGroupRequest;
@@ -23,6 +24,7 @@ import ro.ase.ism.dissertation.repository.CourseRepository;
 import ro.ase.ism.dissertation.repository.StudentGroupRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 import ro.ase.ism.dissertation.utils.FormatUtils;
+import ro.ase.ism.dissertation.utils.ValidationUtils;
 
 import java.util.Optional;
 
@@ -57,7 +59,11 @@ public class AdminCourseGroupService {
             throw new ConflictException("This student group is already assigned to this course in this academic year");
         }
 
-        log.info("Assigning course {} to group {}", request.getCourseId(), request.getStudentGroupId());
+        if (request.getAcademicYear() < ValidationUtils.getCurrentAcademicYear()) {
+            throw new AccessDeniedException("Cannot assign course group to a past academic year");
+        }
+
+        log.info("Assigning course {} to group {}", course.getName(), studentGroup.getName());
 
         CourseGroup courseGroup = CourseGroup.builder()
                 .course(course)
