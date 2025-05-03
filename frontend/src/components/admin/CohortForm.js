@@ -4,6 +4,7 @@ import "../../styles/modal.css";
 
 const CohortForm = ({ onClose, onSuccess }) => {
     const [name, setName] = useState("");
+    const [educationLevel, setEducationLevel] = useState("BACHELOR");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -16,7 +17,10 @@ const CohortForm = ({ onClose, onSuccess }) => {
 
         try {
             setLoading(true);
-            await api.post("/admin/cohorts", { name });
+            await api.post("/admin/cohorts", {
+                name,
+                educationLevel
+            });
             onSuccess();
         } catch (error) {
             console.error("Failed to create cohort", error);
@@ -37,6 +41,14 @@ const CohortForm = ({ onClose, onSuccess }) => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
+                    <select
+                        name="educationLevel"
+                        value={educationLevel}
+                        onChange={(e) => setEducationLevel(e.target.value)}>
+                        <option value="BACHELOR">Bachelor</option>
+                        <option value="MASTER">Master</option>
+                        <option value="PHD">PhD</option>
+                    </select>
                     <div className="modal-buttons">
                         <button type="button" onClick={onClose} disabled={loading}>
                             Cancel

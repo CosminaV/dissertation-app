@@ -3,6 +3,15 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+.page-container h3 {
+    margin-top: 1.5rem;
+    font-size: 1.4rem;
+    color: #1a3c40;
+    border-left: 4px solid #86b6f6;
+    padding-left: 0.5rem;
+}
+
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -30,8 +39,9 @@
 
 .cohort-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
+    margin-top: 1rem;
 }
 
 .cohort-card {

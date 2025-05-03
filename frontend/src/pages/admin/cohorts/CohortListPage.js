@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import api from "../../../api";
 import CohortForm from "../../../components/admin/CohortForm";
 import "../../../styles/admin/cohorts.css";
@@ -23,6 +23,15 @@ const CohortListPage = () => {
         fetchCohorts();
     }, []);
 
+    const groupedCohorts = useMemo(() => {
+        return cohorts.reduce((acc, cohort) => {
+            const level = cohort.educationLevel;
+            if (!acc[level]) acc[level] = [];
+            acc[level].push(cohort);
+            return acc;
+        }, {});
+    },[cohorts]);
+
     return (
         <div className="page-container">
             <div className="header">
@@ -32,18 +41,21 @@ const CohortListPage = () => {
 
             {loading ? (
                 <p>Loading cohorts...</p>
+            ) : cohorts.length === 0 ? (
+                <p>No cohorts found.</p>
             ) : (
-                <div className="cohort-list">
-                    {cohorts.length === 0 ? (
-                        <p>No cohorts found.</p>
-                    ) : (
-                        cohorts.map((cohort) => (
-                            <div key={cohort.id} className="cohort-card">
-                                <strong>{cohort.name}</strong>
-                            </div>
-                        ))
-                    )}
-                </div>
+                Object.entries(groupedCohorts).map(([level, list]) => (
+                    <div key={level}>
+                        <h3>{level}</h3>
+                        <div className="cohort-list">
+                            {list.map((cohort) => (
+                                <div key={cohort.id} className="cohort-card">
+                                    <strong>{cohort.name}</strong>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))
             )}
 
             {showForm && (
