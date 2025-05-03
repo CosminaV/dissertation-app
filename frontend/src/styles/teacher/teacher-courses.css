@@ -39,15 +39,6 @@
     font-style: italic;
 }
 
-.course-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
 .teacher-course-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -105,7 +96,7 @@
 }
 
 .academic-dropdown-options {
-    display: none;
+    display: block;
     position: absolute;
     top: 110%;
     left: 0;

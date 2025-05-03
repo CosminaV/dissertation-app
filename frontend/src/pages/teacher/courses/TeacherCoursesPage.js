@@ -7,6 +7,7 @@ const TeacherCoursesPage = () => {
     const [courses, setCourses] = useState([]);
     const [academicYears, setAcademicYears] = useState([]);
     const [selectedYear, setSelectedYear] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const navigate = useNavigate();
 
@@ -61,15 +62,35 @@ const TeacherCoursesPage = () => {
                     <h2>My Courses</h2>
                     <div className="academic-filter">
                         <div className="custom-academic-dropdown">
-                            <div className="academic-dropdown-label">{selectedYear || "All Years"}</div>
-                            <div className="academic-dropdown-options">
-                                <div onClick={() => setSelectedYear(null)}>All Years</div>
-                                {academicYears.map(year => (
-                                    <div key={year} onClick={() => setSelectedYear(year)}>
-                                        {year}
-                                    </div>
-                                ))}
+                            <div
+                                className="academic-dropdown-label"
+                                onClick={() => setDropdownOpen(prev => !prev)}
+                            >
+                                {selectedYear || "All Years"}
                             </div>
+                            {dropdownOpen && (
+                                <div className="academic-dropdown-options">
+                                    <div
+                                        onClick={() => {
+                                            setSelectedYear(null);
+                                            setDropdownOpen(false);
+                                        }}
+                                    >
+                                        All Years
+                                    </div>
+                                    {academicYears.map(year => (
+                                        <div
+                                            key={year}
+                                            onClick={() => {
+                                                setSelectedYear(year);
+                                                setDropdownOpen(false);
+                                            }}
+                                        >
+                                            {year}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
