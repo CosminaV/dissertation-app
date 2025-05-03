@@ -1,16 +1,26 @@
-import React, {useCallback, useEffect, useState} from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import api from "../../../api";
-import "../../../styles/admin/student-groups.css";
+import "../../../styles/admin/student-group-detail.css";
 import AssignStudentsForm from "../../../components/admin/AssignStudentsForm";
 import MoveStudentForm from "../../../components/admin/MoveStudentForm";
 import AssignCourseGroupForm from "../../../components/admin/AssignCourseGroupForm";
 
+// Helper to get current academic year (e.g., May 2025 => 2024, Sept 2025 => 2025)
+function getCurrentAcademicYear() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0 = Jan, 8 = Sept
+    return month >= 8 ? year : year - 1;
+}
+
 const StudentGroupDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const academicYear = searchParams.get("academicYear") ? Number(searchParams.get("academicYear")) : null;
+
     const [group, setGroup] = useState(null);
-    const [students, setStudents] = useState([]);
     const [showAssignModal, setShowAssignModal] = useState(false);
     const [showMoveModal, setShowMoveModal] = useState(false);
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -19,26 +29,29 @@ const StudentGroupDetailPage = () => {
 
     const fetchGroupDetails = useCallback(async () => {
         try {
-            const groupRes = await api.get(`/admin/student-groups/${id}`);
+            const endpoint = academicYear
+                ? `/admin/student-groups/${id}?academicYear=${academicYear}`
+                : `/admin/student-groups/${id}`;
+            const groupRes = await api.get(endpoint);
             setGroup(groupRes.data);
-
-            const studentsRes = await api.get(`/admin/student-groups/${id}/students`);
-            setStudents(studentsRes.data);
         } catch (err) {
             console.error("Error loading group", err);
             navigate("/not-found");
         }
-    }, [id, navigate]);
+    }, [id, academicYear, navigate]);
 
     const fetchCoursesById = useCallback(async () => {
         try {
-            const res = await api.get(`admin/student-groups/${id}/courses`);
+            const endpoint = academicYear
+                ? `admin/student-groups/${id}/courses?academicYear=${academicYear}`
+                : `admin/student-groups/${id}/courses`;
+            const res = await api.get(endpoint);
             setCourses(res.data);
         } catch (err) {
             console.error("Error loading courses", err);
-            alert("Could not load assigned courses for this student group!");
+            alert("Could not load assigned courses for this student group: " + err.response.data.error);
         }
-    }, [id]);
+    }, [id, academicYear]);
 
     const handleRemove = async (studentId) => {
         try {
@@ -46,7 +59,7 @@ const StudentGroupDetailPage = () => {
             fetchGroupDetails();
         } catch (error) {
             console.error("Failed to remove student", error);
-            alert("Could not remove student from group.");
+            alert("Could not remove student from group: " + error.response.data.error);
         }
     };
 
@@ -67,49 +80,54 @@ const StudentGroupDetailPage = () => {
 
     if (!group) return <p>Loading group...</p>;
 
+    const currentAcademicYear = getCurrentAcademicYear();
+    const groupAcademicYear = group.academicYear ? Number(group.academicYear.split("-")[0]) : undefined;
+    const isHistoric = groupAcademicYear !== undefined && groupAcademicYear !== currentAcademicYear;
+
     return (
         <div className="group-detail">
-            <div className="group-header">
+            <div className="group-detail-header">
                 <div>
-                    <h2>Group: {group.name}</h2>
+                    <h2>Group: {group.name + group.cohortName}</h2>
                     <p>Level: {group.educationLevel}</p>
                     <p>Year of study: {group.yearOfStudy}</p>
-                    <p>{students.length} student(s)</p>
+                    <p>{group.students.length} student(s)</p>
+                    {group.academicYear && <p><b>Academic year: {group.academicYear}</b></p>}
                 </div>
                 <div className="group-actions">
-                    <button onClick={() => setShowAssignModal(true)}>Assign Students</button>
-                    <button onClick={() => setShowAssignCourseModal(true)}>Assign Course</button>
+                    {!isHistoric && (
+                        <>
+                            <button onClick={() => setShowAssignModal(true)}>Assign Students</button>
+                            <button onClick={() => setShowAssignCourseModal(true)}>Assign Course</button>
+                        </>
+                    )}
+
                 </div>
             </div>
 
             <h3>Students</h3>
-            {students.length > 0 ? (
-                // <ul className="student-list">
-                //     {students.map(student => (
-                //         <li key={student.id}>
-                //             {student.firstName} {student.lastName} ({student.email})
-                //         </li>
-                //     ))}
-                // </ul>
+            {group.students.length > 0 ? (
                 <table className="student-table">
                     <thead>
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th></th>
+                        {!isHistoric && <th></th>}
                     </tr>
                     </thead>
                     <tbody>
-                    {students.map((student) => (
+                    {group.students.map((student) => (
                         <tr key={student.id}>
                             <td>{student.firstName} {student.lastName}</td>
                             <td>{student.email}</td>
-                            <td>
-                                <div className="action-buttons">
-                                    <button className="remove-btn" onClick={() => handleRemove(student.id)} title="Remove">✕</button>
-                                    <button className="move-btn" onClick={() => openMoveModal(student)} title="Move">⇄</button>
-                                </div>
-                            </td>
+                            {!isHistoric && (
+                                <td>
+                                    <div className="action-buttons">
+                                        <button className="remove-btn" onClick={() => handleRemove(student.id)} title="Remove">✕</button>
+                                        <button className="move-btn" onClick={() => openMoveModal(student)} title="Move">⇄</button>
+                                    </div>
+                                </td>
+                            )}
                         </tr>
                     ))}
                     </tbody>
@@ -144,7 +162,7 @@ const StudentGroupDetailPage = () => {
                 <p>No assigned courses yet.</p>
             )}
 
-            {showAssignModal && (
+            {!isHistoric && showAssignModal && (
                 <AssignStudentsForm
                     groupId={group.id}
                     educationLevel={group.educationLevel}
@@ -156,7 +174,7 @@ const StudentGroupDetailPage = () => {
                 />
             )}
 
-            {showMoveModal && selectedStudent && (
+            {!isHistoric && showMoveModal && selectedStudent && (
                 <MoveStudentForm
                     student={selectedStudent}
                     currentGroupId={group.id}
@@ -169,7 +187,7 @@ const StudentGroupDetailPage = () => {
                 />
             )}
 
-            {showAssignCourseModal && (
+            {!isHistoric && showAssignCourseModal && (
                 <AssignCourseGroupForm
                     studentGroupId={group.id}
                     onClose={() => setShowAssignCourseModal(false)}

@@ -1,0 +1,98 @@
+.group-detail {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.group-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.group-detail-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+    margin: 0;
+}
+
+.group-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.group-actions button {
+    background-color: rgba(174, 208, 238, 0.9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.group-actions button:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.course-table,
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fffef5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.course-table th,
+.course-table td,
+.student-table th,
+.student-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.course-table th,
+.student-table th {
+    background-color: #f4f4f4;
+    color: #222831;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.remove-btn,
+.move-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.remove-btn {
+    color: #d62828;
+}
+
+.remove-btn:hover {
+    color: #a4161a;
+}
+
+.move-btn {
+    color: #577590;
+    margin-left: 0.5rem;
+}
+
+.move-btn:hover {
+    color: #1d3557;
+}
+
+.error {
+    color: #d62828;
+    font-size: 0.85rem;
+}
