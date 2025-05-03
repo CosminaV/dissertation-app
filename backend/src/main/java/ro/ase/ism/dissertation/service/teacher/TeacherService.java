@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.ase.ism.dissertation.dto.coursegroup.TeacherCourseInfoResponse;
+import ro.ase.ism.dissertation.dto.teacher.TeacherCourseInfoResponse;
 import ro.ase.ism.dissertation.dto.teacher.TeacherCourseAssignmentResponse;
 import ro.ase.ism.dissertation.exception.EntityNotFoundException;
 import ro.ase.ism.dissertation.exception.InvalidAssignmentException;
@@ -73,7 +73,7 @@ public class TeacherService {
                                     .educationLevel(group.getEducationLevel())
                                     .yearOfStudy(group.getYearOfStudy())
                                     .role("PRACTICAL")
-                                    .target(group.getName())
+                                    .target(group.getName() + group.getCohort().getName())
                                     .targetId(cg.getId())
                                     .build();
                         })
