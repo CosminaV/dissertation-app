@@ -30,6 +30,7 @@ public class AdminCohortService {
 
         Cohort cohort = Cohort.builder()
                 .name(cohortRequest.getName())
+                .educationLevel(cohortRequest.getEducationLevel())
                 .build();
 
         cohortRepository.save(cohort);
@@ -42,6 +43,7 @@ public class AdminCohortService {
                 .map(cohort -> CohortResponse.builder()
                         .id(cohort.getId())
                         .name(cohort.getName())
+                        .educationLevel(cohort.getEducationLevel())
                         .build())
                 .toList();
     }
