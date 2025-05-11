@@ -33,4 +33,9 @@ build/
 .vscode/
 
 vault-unseal-keys.txt
-backend/src/main/resources/.env
+*.pem
+*.key
+*.crt
+*.jks
+*.p12
+*.env
