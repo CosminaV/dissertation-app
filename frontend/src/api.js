@@ -1,17 +1,25 @@
 import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BIOMETRICS_API_BASE_URL = process.env.REACT_APP_BIOMETRICS_API_BASE_URL;
 
 const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     },
-    withCredentials: true, // for the http cookie
+    withCredentials: true,
+});
+
+const biometricsApi = axios.create({
+    baseURL: BIOMETRICS_API_BASE_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+    withCredentials: true,
 });
 
 const publicEndpoints = ["/authenticate", "/refresh", "/authenticate-otp"];
-
 let currentAccessToken = null;
 
 // TODO
@@ -22,12 +30,12 @@ let currentAccessToken = null;
 // and also can get rid of currentAccessToken variable
 export const setCurrentAccessToken = (token) => {
     currentAccessToken = token;
-}
+};
 
-// interceptor used for adding access token to each secure request
 export const setupInterceptors = (refreshAccessToken, logout) => {
-    api.interceptors.request.use((config) => {
-        const isPublic = publicEndpoints.some((endpoint) => config.url.includes(endpoint));
+    const attachAuthHeader = (config) => {
+        const url = config.url || "";
+        const isPublic = publicEndpoints.some((endpoint) => url.includes(endpoint));
 
         if (!isPublic && currentAccessToken) {
             config.headers["Authorization"] = `Bearer ${currentAccessToken}`;
@@ -36,30 +44,36 @@ export const setupInterceptors = (refreshAccessToken, logout) => {
         }
 
         return config;
-    }, (error) => Promise.reject(error));
+    };
 
-    api.interceptors.response.use((response) => response,
-        async (error) => {
-            const originalRequest = error.config;
+    const handleErrorResponse = async (error) => {
+        const originalRequest = error.config;
 
-            if (error.response && error.response.status === 401) {
-                const errorMessage = error.response.data?.error;
+        if (error.response && error.response.status === 401) {
+            const errorMessage = error.response.data?.error;
 
-                if (errorMessage === "Token expired or invalid" && !originalRequest._retry) {
-                    originalRequest._retry = true;
-                    try {
-                        const newAccessToken = await refreshAccessToken();
-                        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-                        return api(originalRequest);
-                    } catch (error) {
-                        console.error("Failed to refresh access token, logging out user");
-                        await logout();
-                        return Promise.reject(error);
-                    }
+            if (errorMessage === "Token expired or invalid" && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    const newAccessToken = await refreshAccessToken();
+                    originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+                    return axios(originalRequest); // Generic re-execution
+                } catch (error) {
+                    console.error("Failed to refresh access token, logging out user");
+                    await logout();
+                    return Promise.reject(error);
                 }
             }
-            return Promise.reject(error);
-        })
-}
+        }
+        return Promise.reject(error);
+    };
 
+    api.interceptors.request.use(attachAuthHeader, (error) => Promise.reject(error));
+    biometricsApi.interceptors.request.use(attachAuthHeader, (error) => Promise.reject(error));
+
+    api.interceptors.response.use((res) => res, handleErrorResponse);
+    biometricsApi.interceptors.response.use((res) => res, handleErrorResponse);
+};
+
+export { api, biometricsApi };
 export default api;

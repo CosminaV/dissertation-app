@@ -17,6 +17,11 @@ import TeacherPage from "./pages/admin/users/TeacherPage";
 import TeacherCoursesPage from "./pages/teacher/courses/TeacherCoursesPage";
 import TeacherCourseGroupDetailPage from "./pages/teacher/courses/TeacherCourseGroupDetailPage";
 import TeacherCourseCohortDetailPage from "./pages/teacher/courses/TeacherCourseCohortDetailPage";
+import StudentCoursesPage from "./pages/student/courses/StudentCoursesPage";
+import StudentCourseGroupDetailPage from "./pages/student/courses/StudentCourseGroupDetailPage";
+import StudentCourseCohortDetailPage from "./pages/student/courses/StudentCourseCohortDetailPage";
+import UploadProfileImage from "./pages/UploadProfileImage";
+import StudentExamPage from "./pages/student/exams/StudentExamPage";
 const App = () => {
   return (
       <Router>
@@ -39,7 +44,13 @@ const App = () => {
                 <Route path="/teacher/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseGroupDetailPage /></PrivateRoute>} />
                 <Route path="/teacher/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseCohortDetailPage/></PrivateRoute>} />
 
+                <Route path="/student/courses" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCoursesPage /></PrivateRoute>} />
+                <Route path="/student/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseGroupDetailPage /></PrivateRoute>} />
+                <Route path="/student/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseCohortDetailPage /></PrivateRoute>} />
+                <Route path="/student/exams" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamPage /></PrivateRoute>} />
+
                 <Route path="/set-password" element={<SetPasswordPage />} />
+                <Route path="/upload-profile-image" element={<UploadProfileImage />} />
                 <Route path="/forbidden" element={<Forbidden />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
