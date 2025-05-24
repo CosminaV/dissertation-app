@@ -11,7 +11,7 @@ import ro.ase.ism.dissertation.dto.studentgroup.StudentResponse;
 import ro.ase.ism.dissertation.model.course.EducationLevel;
 import ro.ase.ism.dissertation.service.AuthenticationService;
 import ro.ase.ism.dissertation.service.OtpService;
-import ro.ase.ism.dissertation.service.UserService;
+import ro.ase.ism.dissertation.service.admin.AdminUserService;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class AdminUserController {
 
     private final AuthenticationService authService;
     private final OtpService otpService;
-    private final UserService userService;
+    private final AdminUserService adminUserService;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(
@@ -38,12 +38,12 @@ public class AdminUserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getNonAdminUsers() {
-        return ResponseEntity.ok(userService.getNonAdminUsers());
+        return ResponseEntity.ok(adminUserService.getNonAdminUsers());
     }
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Integer userId) {
-        return ResponseEntity.ok(userService.getUser(userId));
+        return ResponseEntity.ok(adminUserService.getUser(userId));
     }
 
     @GetMapping("/students")
@@ -51,6 +51,6 @@ public class AdminUserController {
             @RequestParam(required = false, defaultValue = "false") Boolean unassignedOnly,
             @RequestParam(required = false) EducationLevel educationLevel,
             @RequestParam(required = false) Integer cohortId) {
-        return ResponseEntity.ok(userService.getFilteredStudents(educationLevel, cohortId, unassignedOnly));
+        return ResponseEntity.ok(adminUserService.getFilteredStudents(educationLevel, cohortId, unassignedOnly));
     }
 }
