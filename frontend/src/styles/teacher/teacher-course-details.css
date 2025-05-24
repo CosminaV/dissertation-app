@@ -6,7 +6,7 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
-.course-header {
+.teacher-course-detail-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,13 +14,13 @@
     text-align: center;
 }
 
-.course-header h2 {
+.teacher-course-detail-header h2 {
     font-size: 2rem;
     color: #222831;
     margin-bottom: 0.5rem;
 }
 
-.course-header p {
+.teacher-course-detail-header p {
     font-size: 1.1rem;
     color: #444;
     margin: 0;
@@ -52,7 +52,7 @@
     text-align: center;
 }
 
-.text-materials-list {
+.teacher-text-materials-list {
     width: 90%;
     max-width: 900px;
     margin: 1.5rem auto;
@@ -61,7 +61,7 @@
     gap: 1rem;
 }
 
-.text-material-item {
+.teacher-text-material-item {
     background-color: #fffef5;
     padding: 1rem;
     border-radius: 8px;
@@ -70,22 +70,11 @@
     transition: background-color 0.2s;
 }
 
-.text-material-item:hover {
+.teacher-text-material-item:hover {
     background-color: #fef9e7;
 }
 
-.text-material-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.text-material-header strong {
-    font-size: 1.1rem;
-    color: #222831;
-}
-
-.text-material-content {
+.teacher-text-material-content {
     margin-top: 0.8rem;
     padding-top: 0.5rem;
     border-top: 1px solid #ddd;
@@ -94,7 +83,7 @@
     white-space: pre-wrap;
 }
 
-.materials-table {
+.teacher-materials-table {
     width: 90%;
     max-width: 900px;
     border-collapse: collapse;
@@ -104,26 +93,26 @@
     overflow: hidden;
 }
 
-.materials-table th,
-.materials-table td {
+.teacher-materials-table th,
+.teacher-materials-table td {
     padding: 0.8rem 1rem;
     /*text-align: left;*/
     border-bottom: 1px solid #e0e0e0;
 }
 
-.materials-table th {
+.teacher-materials-table th {
     background-color: #f4f4f4;
     color: #222831;
     font-weight: bold;
     text-align: center;
 }
 
-.materials-table td {
+.teacher-materials-table td {
     text-align: center;
     color: #333;
 }
 
-.action-buttons {
+.teacher-course-action-buttons {
     gap: 0.5rem;
 }
 
@@ -137,7 +126,7 @@
     justify-content: center;
 }
 
-.action-buttons button {
+.teacher-course-action-buttons button {
     background: none;
     border: none;
     font-size: 1rem;
@@ -145,7 +134,7 @@
     color: #577590;
 }
 
-.action-buttons button:hover {
+.teacher-course-action-buttons button:hover {
     color: #1d3557;
 }
 
@@ -154,7 +143,7 @@
     font-size: 0.85rem;
 }
 
-.no-materials-message {
+.teacher-no-materials-message {
     margin-top: 2rem;
     font-size: 1.1rem;
     color: #888;

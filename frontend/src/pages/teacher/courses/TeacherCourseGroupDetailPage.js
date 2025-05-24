@@ -116,7 +116,7 @@ const TeacherCourseGroupDetailPage = () => {
 
     return (
         <div className="teacher-course-detail">
-            <div className="course-header">
+            <div className="teacher-course-detail-header">
                 <div>
                     <h2>{courseGroupInfo.courseName}</h2>
                     <p>Group: {courseGroupInfo.target}</p>
@@ -128,109 +128,85 @@ const TeacherCourseGroupDetailPage = () => {
                 </div>
             </div>
 
-            {/*<h3>Materials</h3>*/}
-            {/*{materials.length > 0 ? (*/}
-            {/*    <table className="materials-table">*/}
-            {/*        <thead>*/}
-            {/*        <tr>*/}
-            {/*            <th>Title</th>*/}
-            {/*            <th>Uploaded At</th>*/}
-            {/*            <th>Last Updated</th>*/}
-            {/*            <th>Actions</th>*/}
-            {/*        </tr>*/}
-            {/*        </thead>*/}
-            {/*        <tbody>*/}
-            {/*        {materials.map((material) => (*/}
-            {/*            <tr key={material.id}>*/}
-            {/*                <td>{material.title}</td>*/}
-            {/*                <td>{material.uploadDate ? material.uploadDate : "-"}</td>*/}
-            {/*                <td>{material.lastUpdatedAt ? material.lastUpdatedAt : "-"}</td>*/}
-            {/*                <td>*/}
-            {/*                    <div className="action-buttons">*/}
-            {/*                        <button onClick={() => handleDownload(material.id)}>Download</button>*/}
-            {/*                        <button onClick={() => handleEdit(material)}>Edit</button>*/}
-            {/*                        <button onClick={() => handleDelete(material.id)}>Delete</button>*/}
-            {/*                    </div>*/}
-            {/*                </td>*/}
-            {/*            </tr>*/}
-            {/*        ))}*/}
-            {/*        </tbody>*/}
-            {/*    </table>*/}
-            {/*) : (*/}
-            {/*    <p>No materials uploaded yet.</p>*/}
-            {/*)}*/}
-
             <h3>Text Materials</h3>
-            <div className="text-materials-list">
-                {materials.filter(m => m.content != null).map((material) => (
-                    <div
-                        key={material.id}
-                        className={`text-material-item ${
-                            expandedTextMaterialId === material.id ? "expanded" : ""
-                        }`}
-                        onClick={() =>
-                            setExpandedTextMaterialId(
-                                expandedTextMaterialId === material.id ? null : material.id
-                            )
-                        }
-                    >
-                        <strong>{material.title}</strong>
-                        {expandedTextMaterialId === material.id && (
-                            <div className="text-material-content">
-                                <p>{material.content}</p>
-                                <p><strong>Uploaded At:</strong> {material.uploadDate || "-"}</p>
-                                <p><strong>Last Updated:</strong> {material.lastUpdatedAt || "-"}</p>
-                                <div className="action-buttons text-actions">
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleEdit(material);
-                                        }}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDelete(material.id);
-                                        }}
-                                    >
-                                        Delete
-                                    </button>
+            {materials.filter(m => m.content != null).length === 0 ? (
+                <p className={"teacher-no-materials-message"}>No file materials available.</p>
+            ) : (
+                <div className="teacher-text-materials-list">
+                    {materials.filter(m => m.content != null).map((material) => (
+                        <div
+                            key={material.id}
+                            className={`teacher-text-material-item ${
+                                expandedTextMaterialId === material.id ? "expanded" : ""
+                            }`}
+                            onClick={() =>
+                                setExpandedTextMaterialId(
+                                    expandedTextMaterialId === material.id ? null : material.id
+                                )
+                            }
+                        >
+                            <strong>{material.title}</strong>
+                            {expandedTextMaterialId === material.id && (
+                                <div className="teacher-text-material-content">
+                                    <p>{material.content}</p>
+                                    <p><strong>Uploaded At:</strong> {material.uploadDate || "-"}</p>
+                                    <p><strong>Last Updated:</strong> {material.lastUpdatedAt || "-"}</p>
+                                    <div className="teacher-course-action-buttons text-actions">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleEdit(material);
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(material.id);
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             <h3>File Materials</h3>
-            <table className="materials-table">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Uploaded At</th>
-                    <th>Last Updated</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {materials.filter(m => m.content == null).map((material) => (
-                    <tr key={material.id}>
-                        <td>{material.title}</td>
-                        <td>{material.uploadDate || "-"}</td>
-                        <td>{material.lastUpdatedAt || "-"}</td>
-                        <td>
-                            <div className="action-buttons file-actions">
-                                <button onClick={() => handleDownload(material.id)}>Download</button>
-                                <button onClick={() => handleEdit(material)}>Edit</button>
-                                <button onClick={() => handleDelete(material.id)}>Delete</button>
-                            </div>
-                        </td>
+            {materials.filter(m => m.content == null).length === 0 ? (
+                <p className={"teacher-no-materials-message"}>No file materials available.</p>
+            ) : (
+                <table className="teacher-materials-table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Uploaded At</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {materials.filter(m => m.content == null).map((material) => (
+                        <tr key={material.id}>
+                            <td>{material.title}</td>
+                            <td>{material.uploadDate || "-"}</td>
+                            <td>{material.lastUpdatedAt || "-"}</td>
+                            <td>
+                                <div className="teacher-course-action-buttons file-actions">
+                                    <button onClick={() => handleDownload(material.id)}>Download</button>
+                                    <button onClick={() => handleEdit(material)}>Edit</button>
+                                    <button onClick={() => handleDelete(material.id)}>Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            )}
 
             {showUploadTextModal && (
                 <UploadTextMaterialForm
