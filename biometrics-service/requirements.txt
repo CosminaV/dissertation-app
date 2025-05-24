@@ -1,0 +1,11 @@
+fastapi[all]
+opencv-python
+deepface
+tf-keras # workaround as tensorflow version 19 is used and RetinaFace expects an older tensorflow version (2.11) or this tf-keras package
+face_recognition
+dlib
+numpy==1.26.4
+Pillow
+requests
+mediapipe
+hvac # hashicorp keyvault to retrieve secrets
