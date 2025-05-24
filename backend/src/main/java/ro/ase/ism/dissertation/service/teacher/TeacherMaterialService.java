@@ -13,6 +13,7 @@ import ro.ase.ism.dissertation.dto.material.MaterialResponse;
 import ro.ase.ism.dissertation.dto.material.UpdateMaterialRequest;
 import ro.ase.ism.dissertation.exception.EntityNotFoundException;
 import ro.ase.ism.dissertation.exception.InvalidFileFormatException;
+import ro.ase.ism.dissertation.exception.MaterialCorruptedException;
 import ro.ase.ism.dissertation.exception.MissingTargetException;
 import ro.ase.ism.dissertation.model.course.CourseGroup;
 import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
@@ -152,12 +153,12 @@ public class TeacherMaterialService {
                 .orElseThrow(() -> new EntityNotFoundException("Material not found"));
 
         if (material.getFilePath() == null) {
-            throw new IllegalStateException("Material does not contain a file");
+            throw new MaterialCorruptedException("Material does not contain a file");
         }
 
         teacherAccessService.validateTeacherOwnsMaterial(material, teacherId);
 
-        log.info("Downloading material with id {}", materialId);
+        log.info("Teacher {} is downloading material with id {}", teacherId, materialId);
 
         InputStream inputStream = fileStorageService.downloadFile(material.getFilePath());
 
@@ -187,7 +188,7 @@ public class TeacherMaterialService {
                 .orElseThrow(() -> new EntityNotFoundException("Material not found"));
 
         if (material.getFilePath() == null) {
-            throw new IllegalStateException("Material does not contain a file");
+            throw new MaterialCorruptedException("Material does not contain a file");
         }
 
         teacherAccessService.validateTeacherOwnsMaterial(material, teacherId);
