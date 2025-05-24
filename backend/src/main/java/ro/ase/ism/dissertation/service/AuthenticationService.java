@@ -25,11 +25,8 @@ import ro.ase.ism.dissertation.model.user.Student;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
-import ro.ase.ism.dissertation.repository.StudentRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
@@ -124,10 +121,13 @@ public class AuthenticationService {
         // create cookie for the refresh token
         ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
 
+        boolean faceImageRequired = user.getRole() != Role.ADMIN && user.getFaceImagePath() == null;
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(AuthenticationResponse.builder()
                         .accessToken(accessToken)
+                        .faceImageRequired(faceImageRequired)
                         .build());
     }
 

@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<RefreshToken> refreshTokens;
 
+    @Column(name = "face_image_path")
+    private String faceImagePath;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

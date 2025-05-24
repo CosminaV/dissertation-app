@@ -21,7 +21,7 @@ spring:
         backend: secret
         default-context: gradus-keyvault
       ssl:
-        trust-store: classpath:vault-truststore.jks
+        trust-store: classpath:vault-trust.jks
         trust-store-password: ${VAULT_TRUST_STORE_PASSWORD}
       uri: https://localhost:8200
   datasource:
@@ -38,6 +38,15 @@ spring:
 #    init:
 #      mode: always
 #      schema-locations: classpath:schema.sql
+
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeme
+    key-store-type: PKCS12
+    key-alias: gradus
 
 jwt:
   access-token-expiration: 900000

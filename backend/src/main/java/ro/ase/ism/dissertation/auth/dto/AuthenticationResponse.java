@@ -15,4 +15,7 @@ public class AuthenticationResponse {
 
     @Builder.Default
     private boolean needsPasswordSetup = false;
+
+    @Builder.Default
+    private boolean faceImageRequired = false;
 }

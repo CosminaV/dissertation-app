@@ -2,6 +2,7 @@ package ro.ase.ism.dissertation.service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -12,6 +13,7 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
+import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +104,22 @@ public class FileStorageService {
                  InvalidKeyException | XmlParserException | InternalException | ErrorResponseException |
                  InvalidResponseException e) {
             throw new RuntimeException("Failed to delete file", e);
+        }
+    }
+
+    public String generatePresignedUrl(String objectKey, int expirySeconds) {
+        try {
+            log.info("Generating presigned URL");
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectKey)
+                            .method(Method.GET)
+                            .expiry(expirySeconds)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Could not generate pre-signed URL",e);
         }
     }
 }
