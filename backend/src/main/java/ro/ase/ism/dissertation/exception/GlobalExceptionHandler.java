@@ -109,6 +109,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(MaterialCorruptedException.class)
+    public ResponseEntity<ErrorResponse> handleMaterialCorrupted(MaterialCorruptedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Uploaded file is too large. Max allowed size is 5MB.");

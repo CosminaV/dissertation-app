@@ -11,4 +11,6 @@ import java.util.List;
 public interface MaterialRepository extends JpaRepository<Material, Integer> {
     List<Material> findByCourseGroupAndTeacher(CourseGroup courseGroup, User teacher);
     List<Material> findByCourseCohortAndTeacher(CourseCohort courseCohort, User teacher);
+    List<Material> findByCourseGroup(CourseGroup courseGroup);
+    List<Material> findByCourseCohort(CourseCohort courseCohort);
 }
