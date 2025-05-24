@@ -4,6 +4,7 @@ import NavbarTeacher from "../pages/teacher/NavbarTeacher";
 import { useAuth } from "../context/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import api from "../api";
+import NavbarStudent from "../pages/student/NavbarStudent";
 
 const Navbar = () => {
     const { accessToken } = useAuth();
@@ -33,8 +34,8 @@ const Navbar = () => {
     const userName = `${userInfo.firstName} ${userInfo.lastName}`;
 
     switch (role) {
-        // case "STUDENT":
-        //     return <NavbarStudent userName={userName} />;
+        case "STUDENT":
+            return <NavbarStudent userName={userName} />;
         case "TEACHER":
             return <NavbarTeacher userName={userName} />;
         case "ADMIN":

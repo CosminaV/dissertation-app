@@ -49,7 +49,7 @@ const StudentGroupDetailPage = () => {
             setCourses(res.data);
         } catch (err) {
             console.error("Error loading courses", err);
-            alert("Could not load assigned courses for this student group: " + err.response.data.error);
+            alert("Could not load assigned courses for this student group: " + err.response?.data?.error);
         }
     }, [id, academicYear]);
 

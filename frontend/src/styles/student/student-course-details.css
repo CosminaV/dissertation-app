@@ -1,4 +1,4 @@
-.teacher-course-group-detail {
+.student-course-detail {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,7 +6,7 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
-.course-group-header {
+.student-course-detail-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,45 +14,26 @@
     text-align: center;
 }
 
-.course-group-header h2 {
+.student-course-detail-header h2 {
     font-size: 2rem;
     color: #222831;
     margin-bottom: 0.5rem;
 }
 
-.course-group-header p {
+.student-course-detail-header p {
     font-size: 1.1rem;
     color: #444;
     margin: 0;
 }
 
-.course-group-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.course-group-actions button {
-    background-color: rgba(174, 208, 238, 0.9);
-    border: none;
-    border-radius: 6px;
-    padding: 0.6rem 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.course-group-actions button:hover {
-    background-color: rgba(228, 195, 152, 0.8);
-}
-
-.teacher-course-group-detail h3 {
+.student-course-detail h3 {
     margin-top: 2rem;
     font-size: 1.5rem;
     color: #1a3c40;
     text-align: center;
 }
 
-.text-materials-list {
+.student-text-materials-list {
     width: 90%;
     max-width: 900px;
     margin: 1.5rem auto;
@@ -61,7 +42,7 @@
     gap: 1rem;
 }
 
-.text-material-item {
+.student-text-material-item {
     background-color: #fffef5;
     padding: 1rem;
     border-radius: 8px;
@@ -70,22 +51,11 @@
     transition: background-color 0.2s;
 }
 
-.text-material-item:hover {
+.student-text-material-item:hover {
     background-color: #fef9e7;
 }
 
-.text-material-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.text-material-header strong {
-    font-size: 1.1rem;
-    color: #222831;
-}
-
-.text-material-content {
+.student-text-material-content {
     margin-top: 0.8rem;
     padding-top: 0.5rem;
     border-top: 1px solid #ddd;
@@ -94,7 +64,7 @@
     white-space: pre-wrap;
 }
 
-.materials-table {
+.student-materials-table {
     width: 90%;
     max-width: 900px;
     border-collapse: collapse;
@@ -104,40 +74,31 @@
     overflow: hidden;
 }
 
-.materials-table th,
-.materials-table td {
+.student-materials-table th,
+.student-materials-table td {
     padding: 0.8rem 1rem;
-    /*text-align: left;*/
     border-bottom: 1px solid #e0e0e0;
 }
 
-.materials-table th {
+.student-materials-table th {
     background-color: #f4f4f4;
     color: #222831;
     font-weight: bold;
     text-align: center;
 }
 
-.materials-table td {
+.student-materials-table td {
     text-align: center;
     color: #333;
 }
 
-.action-buttons {
+.student-course-action-buttons {
+    display: inline-flex;
+    justify-content: center;
     gap: 0.5rem;
 }
 
-.text-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.file-actions {
-    display: inline-flex;
-    justify-content: center;
-}
-
-.action-buttons button {
+.student-course-action-buttons button {
     background: none;
     border: none;
     font-size: 1rem;
@@ -145,17 +106,14 @@
     color: #577590;
 }
 
-.action-buttons button:hover {
+.student-course-action-buttons button:hover {
     color: #1d3557;
 }
 
-.error {
-    color: #d62828;
-    font-size: 0.85rem;
-}
-
-.no-materials-message {
-    margin-top: 2rem;
+.student-no-materials-message {
+    margin-top: 1rem;
     font-size: 1.1rem;
     color: #888;
+    text-align: center;
+    font-style: italic;
 }

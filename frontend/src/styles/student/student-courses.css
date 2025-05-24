@@ -1,0 +1,141 @@
+.student-course-page {
+    padding: 2rem 3rem;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.student-course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.student-course-header h2 {
+    font-size: 1.8rem;
+    color: #222831;
+    margin: 0;
+}
+
+.student-course-page h3 {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: #1a3c40;
+    text-align: left;
+}
+
+.student-course-page h4 {
+    margin-top: 1.2rem;
+    font-size: 1.3rem;
+    color: #2f4858;
+    border-left: 4px solid #86b6f6;
+    padding-left: 0.5rem;
+}
+
+.student-course-page h5 {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #36454f;
+    font-weight: normal;
+    padding-left: 1rem;
+    font-style: italic;
+}
+
+.student-academic-filter {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.student-custom-academic-dropdown {
+    position: relative;
+    font-weight: 500;
+    color: #222831;
+    cursor: pointer;
+}
+
+.student-academic-dropdown-label {
+    background-color: #fffbea;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    min-width: 160px;
+    user-select: none;
+    text-align: center;
+    position: relative;
+}
+
+.student-academic-dropdown-label::after {
+    content: "▼";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    pointer-events: none;
+    color: #222831;
+}
+
+.student-academic-dropdown-options {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+    width: 100%;
+    overflow: hidden;
+}
+
+.student-academic-dropdown-options div {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    color: #222831;
+    cursor: pointer;
+}
+
+.student-academic-dropdown-options div:hover {
+    background-color: rgba(228, 195, 152, 0.8);
+}
+
+.student-course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.student-course-card {
+    background-color: #fffbea;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.student-course-card:hover {
+    transform: translateY(-2px);
+    background-color: #b7d9ed;
+}
+
+.student-course-card strong {
+    font-size: 1.1rem;
+    color: #222831;
+}
+
+.student-course-card p {
+    font-size: 1rem;
+    margin: 0;
+    color: #333;
+}
+
+.student-no-courses-message {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 3rem;
+    font-style: italic;
+}
