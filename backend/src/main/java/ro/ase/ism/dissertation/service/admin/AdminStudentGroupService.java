@@ -208,7 +208,7 @@ public class AdminStudentGroupService {
 
         int currentAcademicYear = ValidationUtils.getCurrentAcademicYear();
 
-        // Find enrollment for the current academic year
+        // find enrollment for the current academic year
         StudentEnrollment enrollment = studentEnrollmentRepository
                 .findByStudentAndAcademicYear(student, currentAcademicYear)
                 .orElseThrow(() -> new StudentGroupException("Student is not enrolled for the current academic year"));
@@ -216,10 +216,10 @@ public class AdminStudentGroupService {
         log.info("Removing student {} from group: {} (academic year {})",
                 student.getEmail(), enrollment.getStudentGroup().getName(), currentAcademicYear);
 
-        // Delete enrollment
+        // delete enrollment
         studentEnrollmentRepository.delete(enrollment);
 
-        // If student's current group matches the enrollment group, clear it
+        // ff student's current group matches the enrollment group => clear it
         if (student.getStudentGroup() != null &&
                 student.getStudentGroup().getId().equals(enrollment.getStudentGroup().getId())) {
             student.setStudentGroup(null);

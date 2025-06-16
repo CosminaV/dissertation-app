@@ -34,7 +34,6 @@ public class UserController {
 
     @GetMapping("/profile-image-url")
     public ResponseEntity<String> getPresignedProfileImageUrl(@AuthenticationPrincipal User user) {
-        log.info("Entered controller: profile-image-url");
         if (user.getFaceImagePath() == null) {
             return ResponseEntity.badRequest().body("User has no profile image");
         }
