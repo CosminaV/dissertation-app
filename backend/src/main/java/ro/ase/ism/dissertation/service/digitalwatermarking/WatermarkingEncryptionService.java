@@ -20,7 +20,7 @@ import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
-public class EncryptionService {
+public class WatermarkingEncryptionService {
 
     @Value("${watermarking.enc.secret}")
     private String secret;

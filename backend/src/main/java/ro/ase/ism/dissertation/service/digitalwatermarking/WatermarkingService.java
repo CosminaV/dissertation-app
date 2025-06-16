@@ -17,13 +17,13 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class WatermarkingService {
 
-    private final EncryptionService encryptionService;
+    private final WatermarkingEncryptionService watermarkingEncryptionService;
     private final ImageService imageService;
     private final StegoService stegoService;
 
     public BufferedImage generateWatermarkImage(User teacher, CourseGroup courseGroup) {
         String payload = buildInvisibleWatermarkPayload(teacher, courseGroup);
-        String encryptedPayload = encryptionService.encrypt(payload);
+        String encryptedPayload = watermarkingEncryptionService.encrypt(payload);
         BufferedImage baseImage = imageService.generateTransparentImage();
 
         log.info("Embedding payload into image");
@@ -32,7 +32,7 @@ public class WatermarkingService {
 
     public BufferedImage generateWatermarkImage(User teacher, CourseCohort courseCohort) {
         String payload = buildInvisibleWatermarkPayload(teacher, courseCohort);
-        String encryptedPayload = encryptionService.encrypt(payload);
+        String encryptedPayload = watermarkingEncryptionService.encrypt(payload);
         BufferedImage baseImage = imageService.generateTransparentImage();
 
         log.info("Embedding payload into image");
@@ -44,7 +44,7 @@ public class WatermarkingService {
     */
     public String extractWatermarkFromImage(BufferedImage image) {
         String encryptedMessage = stegoService.extract(image);
-        String decryptedMessage = encryptionService.decrypt(encryptedMessage);
+        String decryptedMessage = watermarkingEncryptionService.decrypt(encryptedMessage);
 
         log.info("Extracting watermark from image");
         return decryptedMessage;
@@ -88,6 +88,6 @@ public class WatermarkingService {
     public String testExtractWatermark(User teacher, CourseGroup courseGroup) {
         BufferedImage watermarkImage = generateWatermarkImage(teacher, courseGroup);
         String encrypted = stegoService.extract(watermarkImage);
-        return encryptionService.decrypt(encrypted);
+        return watermarkingEncryptionService.decrypt(encrypted);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ro.ase.ism.dissertation.dto.teacher.TeacherCourseAssignmentResponse;
-import ro.ase.ism.dissertation.service.teacher.TeacherService;
+import ro.ase.ism.dissertation.service.teacher.TeacherCourseService;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminTeacherController {
 
-    private final TeacherService teacherService;
+    private final TeacherCourseService teacherCourseService;
 
     @GetMapping("/{teacherId}/courses")
     public ResponseEntity<List<TeacherCourseAssignmentResponse>> getTeacherCourses(@PathVariable Integer teacherId) {
-        List<TeacherCourseAssignmentResponse> courses = teacherService.getTeacherCourses(teacherId);
+        List<TeacherCourseAssignmentResponse> courses = teacherCourseService.getTeacherCourses(teacherId);
         return ResponseEntity.ok(courses);
     }
 }

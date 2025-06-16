@@ -28,7 +28,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TeacherService {
+public class TeacherCourseService {
 
     private final UserRepository userRepository;
     private final CourseGroupRepository courseGroupRepository;
@@ -51,17 +51,6 @@ public class TeacherService {
                         .map(cg -> {
                             Course course = cg.getCourse();
                             StudentGroup group = cg.getStudentGroup();
-                            //Cohort cohort = group.getCohort();
-
-                            // find academic year via CourseCohort
-//                            Optional<CourseCohort> ccOpt = course.getCourseCohorts().stream()
-//                                    .filter(cc -> cc.getCohort().equals(cohort))
-//                                    .findFirst();
-//
-//                            String formattedYear = ccOpt
-//                                    .map(CourseCohort::getAcademicYear)
-//                                    .map(FormatUtils::formatAcademicYear)
-//                                    .orElse("-");
 
                             String formattedYear = cg.getAcademicYear() != null ? FormatUtils.formatAcademicYear(cg.getAcademicYear()) : "-";
 

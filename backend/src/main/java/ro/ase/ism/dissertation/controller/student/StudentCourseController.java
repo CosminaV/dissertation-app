@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ro.ase.ism.dissertation.dto.exam.ExamResponse;
 import ro.ase.ism.dissertation.dto.student.StudentCourseInfoResponse;
 import ro.ase.ism.dissertation.dto.student.StudentCourseResponse;
 import ro.ase.ism.dissertation.model.user.User;
-import ro.ase.ism.dissertation.service.student.StudentService;
+import ro.ase.ism.dissertation.service.student.StudentCourseService;
+import ro.ase.ism.dissertation.service.student.StudentExamService;
 
 import java.util.List;
 
@@ -21,12 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentCourseController {
 
-    private final StudentService studentService;
+    private final StudentCourseService studentCourseService;
+    private final StudentExamService studentExamService;
 
     @GetMapping
     public ResponseEntity<List<StudentCourseResponse>> getStudentCourses(@AuthenticationPrincipal User user) {
         log.info("Get student courses");
-        return ResponseEntity.ok(studentService.getCoursesForStudent(user.getId()));
+        return ResponseEntity.ok(studentCourseService.getCoursesForStudent(user.getId()));
     }
 
     @GetMapping("/course-groups/{courseGroupId}")
@@ -34,7 +37,7 @@ public class StudentCourseController {
             @PathVariable Integer courseGroupId,
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(studentService.getCourseGroupInfo(courseGroupId, user.getId()));
+        return ResponseEntity.ok(studentCourseService.getCourseGroupInfo(courseGroupId, user.getId()));
     }
 
     @GetMapping("/course-cohorts/{courseCohortId}")
@@ -42,6 +45,14 @@ public class StudentCourseController {
             @PathVariable Integer courseCohortId,
             @AuthenticationPrincipal User user
     ) {
-        return ResponseEntity.ok(studentService.getCourseCohortInfo(courseCohortId, user.getId()));
+        return ResponseEntity.ok(studentCourseService.getCourseCohortInfo(courseCohortId, user.getId()));
+    }
+
+    @GetMapping("/course-cohorts/{courseCohortId}/exams")
+    public ResponseEntity<List<ExamResponse>> getExamsForCourseCohort(
+            @PathVariable Integer courseCohortId,
+            @AuthenticationPrincipal User user
+    ) {
+        return ResponseEntity.ok(studentExamService.getExamsForCourseCohort(courseCohortId, user.getId()));
     }
 }

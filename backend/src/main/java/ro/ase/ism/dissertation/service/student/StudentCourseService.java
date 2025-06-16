@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class StudentService {
+public class StudentCourseService {
 
     private final StudentRepository studentRepository;
     private final CourseGroupRepository courseGroupRepository;
@@ -48,7 +48,7 @@ public class StudentService {
             StudentGroup studentGroup = enrollment.getStudentGroup();
             Cohort cohort = enrollment.getCohort();
 
-            log.info("Checking student group {} and cohort {} for year {}", studentGroup, cohort, academicYear);
+            log.info("Checking student group {} and cohort {} for year {}", studentGroup.getId(), cohort.getId(), academicYear);
 
             // Fetch practical courses only for explicit studentGroup and year
             List<CourseGroup> practicals = courseGroupRepository
