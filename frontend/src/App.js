@@ -21,7 +21,9 @@ import StudentCoursesPage from "./pages/student/courses/StudentCoursesPage";
 import StudentCourseGroupDetailPage from "./pages/student/courses/StudentCourseGroupDetailPage";
 import StudentCourseCohortDetailPage from "./pages/student/courses/StudentCourseCohortDetailPage";
 import UploadProfileImage from "./pages/UploadProfileImage";
-import StudentExamPage from "./pages/student/exams/StudentExamPage";
+import TeacherExamDetailPage from "./pages/teacher/exams/TeacherExamDetailPage";
+import StudentExamDetailPage from "./pages/student/exams/StudentExamDetailPage";
+import TeacherExamMonitoringPage from "./pages/teacher/exams/TeacherExamMonitoringPage";
 const App = () => {
   return (
       <Router>
@@ -43,11 +45,14 @@ const App = () => {
                 <Route path="/teacher/courses" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCoursesPage /></PrivateRoute>} />
                 <Route path="/teacher/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseGroupDetailPage /></PrivateRoute>} />
                 <Route path="/teacher/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherCourseCohortDetailPage/></PrivateRoute>} />
+                <Route path="/teacher/exams/:examId" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherExamDetailPage/></PrivateRoute>} />
+                <Route path="/teacher/exams/:examId/monitoring" element={<PrivateRoute allowedRoles={["TEACHER"]}><TeacherExamMonitoringPage/></PrivateRoute>} />
 
                 <Route path="/student/courses" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCoursesPage /></PrivateRoute>} />
                 <Route path="/student/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseGroupDetailPage /></PrivateRoute>} />
                 <Route path="/student/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseCohortDetailPage /></PrivateRoute>} />
-                <Route path="/student/exams" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamPage /></PrivateRoute>} />
+                {/*<Route path="/student/exams" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamPage /></PrivateRoute>} />*/}
+                <Route path="/student/exams/:examId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamDetailPage /></PrivateRoute>} />
 
                 <Route path="/set-password" element={<SetPasswordPage />} />
                 <Route path="/upload-profile-image" element={<UploadProfileImage />} />

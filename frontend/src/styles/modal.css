@@ -21,6 +21,14 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+.modal-content.exam-modal {
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .modal-content h2 {
     margin-bottom: 1rem;
     font-size: 1.5rem;
@@ -52,7 +60,7 @@
     background-color: #fffde1;
 }
 
-.modal-content textarea {
+.modal-content textarea:not(.option-text) {
     width: 100%;
     padding: 0.8rem;
     border: 1px solid #ccc;

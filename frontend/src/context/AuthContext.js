@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const login = (token) => {
         setAccessToken(token);
         setCurrentAccessToken(token);
+        sessionStorage.setItem("wasLoggedIn", "true");
     };
 
     // remove the access token from context when user logs out
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
                 return newAccessToken;
             }
         } catch (error) {
-            console.error("Refresh token expired or invalid", error);
+            console.error("Refresh token expired or invalid. Logging user out.", error);
             setAccessToken(null);
             sessionStorage.removeItem("wasLoggedIn")
             navigate("/login");
@@ -54,10 +55,10 @@ export const AuthProvider = ({ children }) => {
     }, [refreshAccessToken, logout]);
 
     useEffect(() => {
-        if (hasRefreshed.current) return;
+        // if (hasRefreshed.current) return;
 
         const wasLoggedIn = sessionStorage.getItem("wasLoggedIn");
-        if (wasLoggedIn && !accessToken) { // manual refresh
+        if (wasLoggedIn && !accessToken && !hasRefreshed.current) { // manual refresh
             console.log("Attempting refresh access token...")
             refreshAccessToken()
                 .then(() => hasRefreshed.current = true)
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         } else {
             setLoading(false);
         }
-    }, [accessToken, refreshAccessToken, logout]);
+    }, [accessToken, refreshAccessToken]);
 
     return (
         <AuthContext.Provider value={{ accessToken, login, logout, loading }}>

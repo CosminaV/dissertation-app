@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../../api";
 import "../../../styles/student/student-course-details.css";
@@ -9,32 +9,44 @@ const StudentCourseCohortDetailPage = () => {
 
     const [courseCohortInfo, setCourseCohortInfo] = useState(null);
     const [materials, setMaterials] = useState([]);
+    const [exams, setExams] = useState([]);
     const [expandedTextMaterialId, setExpandedTextMaterialId] = useState(null);
 
+    const fetchCourseCohortInfo =  useCallback(async () => {
+        try {
+            const res = await api.get(`/student/courses/course-cohorts/${targetId}`);
+            setCourseCohortInfo(res.data);
+        } catch (err) {
+            console.error("Failed to load course cohort info", err);
+            navigate("/not-found");
+        }
+    }, [targetId, navigate]);
+
+    const fetchMaterials = useCallback(async () => {
+        try {
+            const res = await api.get(`/student/materials/course-cohorts/${targetId}/materials`);
+            setMaterials(res.data);
+        } catch (err) {
+            console.error("Failed to load materials", err);
+            alert("Could not load materials");
+        }
+    }, [targetId]);
+
+    const fetchExams = useCallback(async () => {
+        try {
+            const res = await api.get(`/student/courses/course-cohorts/${targetId}/exams`);
+            setExams(res.data);
+        } catch (err) {
+            console.error("Error loading exams", err);
+            alert("Could not load exams!");
+        }
+    },[targetId]);
+
     useEffect(() => {
-        const fetchCourseCohortInfo = async () => {
-            try {
-                const res = await api.get(`/student/courses/course-cohorts/${targetId}`);
-                setCourseCohortInfo(res.data);
-            } catch (err) {
-                console.error("Failed to load course cohort info", err);
-                navigate("/not-found");
-            }
-        };
-
-        const fetchMaterials = async () => {
-            try {
-                const res = await api.get(`/student/materials/course-cohorts/${targetId}/materials`);
-                setMaterials(res.data);
-            } catch (err) {
-                console.error("Failed to load materials", err);
-                alert("Could not load materials");
-            }
-        };
-
         fetchCourseCohortInfo();
         fetchMaterials();
-    }, [targetId, navigate]);
+        fetchExams();
+    }, [fetchCourseCohortInfo, fetchMaterials, fetchExams]);
 
     const handleDownload = async (materialId) => {
         try {
@@ -133,6 +145,23 @@ const StudentCourseCohortDetailPage = () => {
                     ))}
                     </tbody>
                 </table>
+            )}
+
+            <h3>Exams</h3>
+            {exams.length === 0 ? (
+                <p className="student-no-exams-message">No exams created yet.</p>
+            ) : (
+                <div className="student-exam-card-container">
+                    {exams.map(exam => (
+                        <div key={exam.id} className="student-exam-card">
+                            <strong
+                                className="student-exam-title-link"
+                                onClick={() => navigate(`/student/exams/${exam.id}`)}
+                            >{exam.title}</strong>
+                            <p>{exam.examDate}</p>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );

@@ -29,7 +29,6 @@ const Login = () => {
             const response = await api.post(endpoint, payload);
             const { accessToken, needsPasswordSetup, faceImageRequired } = response.data;
             login(accessToken);
-            sessionStorage.setItem("wasLoggedIn", true);
 
             if (needsPasswordSetup) {
                 navigate("/set-password", { state: { email : formData.email } });

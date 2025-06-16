@@ -1,0 +1,108 @@
+.teacher-exam-detail {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: #f9f9ff;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.teacher-exam-detail h2 {
+    font-size: 1.6rem;
+    color: #2a6acb;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.teacher-exam-detail p {
+    font-size: 1rem;
+    color: #222831;
+    margin-bottom: 0.8rem;
+}
+
+.teacher-exam-detail strong {
+    font-weight: bold;
+    color: #222831;
+}
+
+.question-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.question-item {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    background: #f9f9ff;
+    border-radius: 6px;
+    color: #222831;
+}
+
+/*.exam-toggle-questions {*/
+/*    cursor: pointer;*/
+/*    margin-top: 1rem;*/
+/*    font-weight: 600;*/
+/*    display: inline-flex;*/
+/*    align-items: center;*/
+/*    gap: 0.3rem;*/
+/*}*/
+
+/*.exam-toggle-questions:hover {*/
+/*    color: #2a6acb;*/
+/*}*/
+
+/*.exam-actions {*/
+/*    margin-top: 1rem;*/
+/*    margin-bottom: 1rem;*/
+/*    display: flex;*/
+/*    justify-content: flex-start;*/
+/*}*/
+
+/*.monitoring-dashboard-button {*/
+/*    padding: 0.6rem 1rem;*/
+/*    font-size: 1rem;*/
+/*    border: none;*/
+/*    border-radius: 6px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.exam-toggle-questions {*/
+/*    margin-bottom: 1rem;*/
+/*    cursor: pointer;*/
+/*    font-weight: bold;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 0.5rem;*/
+/*}*/
+
+.exam-top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.monitoring-dashboard-button {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.exam-toggle-questions {
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

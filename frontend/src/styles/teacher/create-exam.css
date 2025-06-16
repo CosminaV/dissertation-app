@@ -1,0 +1,90 @@
+.create-question-block {
+    background-color: #f5f5ff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.option-hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0.4rem 0;
+}
+
+.option-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.6rem;
+    align-items: start;
+    width: 100%;
+    margin-bottom: 0.6rem;
+}
+
+.option-radio {
+    justify-self: start;
+    margin-top: 0.5rem;
+}
+
+.option-text {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 2.5rem;
+    max-height: 10rem;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+.remove-option {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.add-option {
+    background-color: #d3e8ff;
+    border: none;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 0.6rem;
+    cursor: pointer;
+}
+
+.add-option:hover {
+    background-color: #bfdfff;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 0.6rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.custom-points-checkbox-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1rem 0;
+    font-weight: 500;
+}

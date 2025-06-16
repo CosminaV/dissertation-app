@@ -4,6 +4,7 @@ import api from "../../../api";
 import "../../../styles/teacher/teacher-course-details.css";
 import UploadTextMaterialForm from "../../../components/teacher/UploadTextMaterialForm";
 import UploadFileMaterialForm from "../../../components/teacher/UploadFileMaterialForm";
+import CreateExamForm from "../../../components/teacher/CreateExamForm";
 
 const TeacherCourseCohortDetailPage = () => {
     const { targetId } = useParams();
@@ -11,8 +12,10 @@ const TeacherCourseCohortDetailPage = () => {
 
     const [courseCohortInfo, setCourseCohortInfo] = useState(null);
     const [materials, setMaterials] = useState([]);
+    const [exams, setExams] = useState([]);
     const [showUploadTextModal, setShowUploadTextModal] = useState(false);
     const [showUploadFileModal, setShowUploadFileModal] = useState(false);
+    const [showCreateExamModal, setShowCreateExamModal] = useState(false);
     const [editedMaterial, setEditedMaterial] = useState(null);
     const [editedTitle, setEditedTitle] = useState("");
     const [editedContent, setEditedContent] = useState("");
@@ -38,10 +41,21 @@ const TeacherCourseCohortDetailPage = () => {
         }
     }, [targetId]);
 
+    const fetchExams = useCallback(async () => {
+        try {
+            const res = await api.get(`/teacher/courses/course-cohorts/${targetId}/exams`);
+            setExams(res.data);
+        } catch (err) {
+            console.error("Error loading exams", err);
+            alert("Could not load exams!");
+        }
+    },[targetId]);
+
     useEffect(() => {
         fetchCourseCohortInfo();
         fetchMaterials();
-    }, [fetchCourseCohortInfo, fetchMaterials]);
+        fetchExams();
+    }, [fetchCourseCohortInfo, fetchMaterials, fetchExams]);
 
     const handleDownload = async (materialId) => {
         try {
@@ -125,6 +139,7 @@ const TeacherCourseCohortDetailPage = () => {
                 <div className="course-actions">
                     <button onClick={() => setShowUploadTextModal(true)}>Upload Text Material</button>
                     <button onClick={() => setShowUploadFileModal(true)}>Upload File Material</button>
+                    <button onClick={() => setShowCreateExamModal(true)}>Create Exam</button>
                 </div>
             </div>
 
@@ -208,6 +223,23 @@ const TeacherCourseCohortDetailPage = () => {
                 </table>
             )}
 
+            <h3>Exams</h3>
+            {exams.length === 0 ? (
+                <p className="teacher-no-exams-message">No exams created yet.</p>
+            ) : (
+                <div className="teacher-exam-card-container">
+                    {exams.map(exam => (
+                        <div key={exam.id} className="teacher-exam-card">
+                            <strong
+                                className="teacher-exam-title-link"
+                                onClick={() => navigate(`/teacher/exams/${exam.id}`)}
+                            >{exam.title}</strong>
+                            <p>{exam.examDate}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
+
             {showUploadTextModal && (
                 <UploadTextMaterialForm
                     targetId={targetId}
@@ -228,6 +260,17 @@ const TeacherCourseCohortDetailPage = () => {
                     onSuccess={() => {
                         fetchMaterials();
                         setShowUploadFileModal(false);
+                    }}
+                />
+            )}
+
+            {showCreateExamModal && (
+                <CreateExamForm
+                    targetId={targetId}
+                    onClose={() => setShowCreateExamModal(false)}
+                    onSuccess={() => {
+                        fetchExams();
+                        setShowCreateExamModal(false);
                     }}
                 />
             )}

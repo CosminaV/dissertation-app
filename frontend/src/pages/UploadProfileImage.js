@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {api, biometricsApi} from "../api";
+import api, {biometricsApi} from "../api";
 import "../styles/upload-profile-image.css";
 
 const UploadProfileImage = () => {
@@ -9,8 +9,6 @@ const UploadProfileImage = () => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState("");
-    const [detectedGender, setDetectedGender] = useState(null);
-    const [showGenderModal, setShowGenderModal] = useState(false);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
 
@@ -62,35 +60,14 @@ const UploadProfileImage = () => {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 
-            const analysis = await biometricsApi.get("/profile-image/analyze-profile-image");
-            setDetectedGender(analysis.data.gender);
-            setShowGenderModal(true);
+            await biometricsApi.get("/profile-image/analyze-profile-image");
+            navigate("/dashboard", { replace: true });
         } catch (err) {
-            if (err.response?.data?.detail) {
-                setMessage(err.response.data.detail);
-            } else if (err.response?.data?.error) {
-                setMessage(err.response.data.error);
-            } else {
-                setMessage("Something went wrong. Please try again.");
-            }
+            const detail = err.response?.data?.detail || err.response?.data?.error;
+            setMessage(detail || "Something went wrong. Please try again.");
         } finally {
             setUploading(false);
         }
-    };
-
-    const confirmGender = () => {
-        navigate("/dashboard", { replace: true });
-    };
-
-    const retakePicture = () => {
-        setShowGenderModal(false);
-        setImage(null);
-        setMessage("");
-        if (mode === "CAMERA") startCamera();
-    };
-
-    const skipCheck = () => {
-        navigate("/dashboard", { replace: true });
     };
 
     return (
@@ -131,15 +108,6 @@ const UploadProfileImage = () => {
                 <p className={`upload-message ${message.includes("failed") ? "error" : ""}`}>
                     {message}
                 </p>
-            )}
-
-            {showGenderModal && (
-                <div className="gender-modal">
-                    <p>We detected a {detectedGender?.toLowerCase()} in your photo. Is this correct?</p>
-                    <button onClick={confirmGender}>Yes</button>
-                    <button onClick={retakePicture}>No, retake picture</button>
-                    <button onClick={skipCheck}>Skip this check</button>
-                </div>
             )}
         </div>
     );
