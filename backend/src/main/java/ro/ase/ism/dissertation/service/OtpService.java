@@ -11,6 +11,7 @@ import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
 import java.security.SecureRandom;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class OtpService {
 
         for (User user : usersWithoutPassword) {
             boolean alreadyHasOtp = oneTimePasswordRepository.findByUserAndUsedFalse(user)
-                    .filter(otp -> otp.getExpiresAt().isAfter(LocalDateTime.now()))
+                    .filter(otp -> otp.getExpiresAt().isAfter(Instant.now()))
                     .isPresent();
 
             if (alreadyHasOtp) {
@@ -47,7 +48,7 @@ public class OtpService {
             OneTimePassword otp = OneTimePassword.builder()
                     .user(user)
                     .otp(passwordEncoder.encode(generatedOtp))
-                    .expiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRATION_MINUTES))
+                    .expiresAt(Instant.now().plusSeconds(OTP_EXPIRATION_MINUTES * 60))
                     .used(false)
                     .build();
 

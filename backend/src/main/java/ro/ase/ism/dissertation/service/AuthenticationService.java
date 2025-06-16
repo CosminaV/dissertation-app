@@ -27,7 +27,7 @@ import ro.ase.ism.dissertation.repository.OneTimePasswordRepository;
 import ro.ase.ism.dissertation.repository.RefreshTokenRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -149,7 +149,7 @@ public class AuthenticationService {
             throw new BadCredentialsException("Incorrect OTP");
         }
 
-        if (otp.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (otp.getExpiresAt().isBefore(Instant.now())) {
             throw new BadCredentialsException("OTP expired");
         }
 
