@@ -16,7 +16,7 @@ import ro.ase.ism.dissertation.repository.CourseGroupRepository;
 import ro.ase.ism.dissertation.repository.MaterialRepository;
 import ro.ase.ism.dissertation.repository.StudentRepository;
 import ro.ase.ism.dissertation.service.FileStorageService;
-import ro.ase.ism.dissertation.service.MaterialService;
+import ro.ase.ism.dissertation.mapper.MaterialMapper;
 
 import java.io.InputStream;
 import java.util.List;
@@ -30,7 +30,7 @@ public class StudentMaterialService {
     private final CourseCohortRepository courseCohortRepository;
     private final StudentRepository studentRepository;
     private final MaterialRepository materialRepository;
-    private final MaterialService materialService;
+    private final MaterialMapper materialMapper;
     private final StudentAccessService studentAccessService;
     private final FileStorageService fileStorageService;
 
@@ -45,7 +45,7 @@ public class StudentMaterialService {
         studentAccessService.validateStudentAccessToCourseGroup(student, courseGroup);
 
         List<Material> materials = materialRepository.findByCourseGroup(courseGroup);
-        return materials.stream().map(materialService::mapToMaterialResponse).toList();
+        return materials.stream().map(materialMapper::mapToMaterialResponse).toList();
     }
 
     public List<MaterialResponse> getMaterialsForCourseCohort(Integer studentId, Integer courseCohortId) {
@@ -59,7 +59,7 @@ public class StudentMaterialService {
         studentAccessService.validateStudentAccessToCourseCohort(student, courseCohort);
 
         List<Material> materials = materialRepository.findByCourseCohort(courseCohort);
-        return materials.stream().map(materialService::mapToMaterialResponse).toList();
+        return materials.stream().map(materialMapper::mapToMaterialResponse).toList();
     }
 
     public MaterialDownloadResponse downloadMaterial(Integer materialId, Integer studentId) {

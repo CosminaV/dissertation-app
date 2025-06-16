@@ -1,14 +1,12 @@
-package ro.ase.ism.dissertation.service;
+package ro.ase.ism.dissertation.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.ase.ism.dissertation.dto.material.MaterialResponse;
 import ro.ase.ism.dissertation.model.material.Material;
 import ro.ase.ism.dissertation.utils.FormatUtils;
 
-@Service
-@RequiredArgsConstructor
-public class MaterialService {
+@Component
+public class MaterialMapper {
 
     public MaterialResponse mapToMaterialResponse(Material material) {
         MaterialResponse.MaterialResponseBuilder builder = MaterialResponse.builder()

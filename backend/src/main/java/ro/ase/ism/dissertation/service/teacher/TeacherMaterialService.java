@@ -25,7 +25,7 @@ import ro.ase.ism.dissertation.repository.CourseGroupRepository;
 import ro.ase.ism.dissertation.repository.MaterialRepository;
 import ro.ase.ism.dissertation.repository.UserRepository;
 import ro.ase.ism.dissertation.service.FileStorageService;
-import ro.ase.ism.dissertation.service.MaterialService;
+import ro.ase.ism.dissertation.mapper.MaterialMapper;
 import ro.ase.ism.dissertation.service.digitalwatermarking.PdfWatermarkEmbedder;
 import ro.ase.ism.dissertation.service.digitalwatermarking.WatermarkingService;
 
@@ -48,7 +48,7 @@ public class TeacherMaterialService {
     private final WatermarkingService watermarkingService;
     private final PdfWatermarkEmbedder pdfWatermarkEmbedder;
     private final TeacherAccessService teacherAccessService;
-    private final MaterialService materialService;
+    private final MaterialMapper materialMapper;
 
     public List<MaterialResponse> getMaterialsForCourseGroup(Integer courseGroupId, Integer teacherId) {
         CourseGroup courseGroup = courseGroupRepository.findById(courseGroupId)
@@ -64,7 +64,7 @@ public class TeacherMaterialService {
         List<Material> materials = materialRepository.findByCourseGroupAndTeacher(courseGroup, teacher);
 
         return materials.stream()
-                .map(materialService::mapToMaterialResponse)
+                .map(materialMapper::mapToMaterialResponse)
         .toList();
     }
 
@@ -82,7 +82,7 @@ public class TeacherMaterialService {
         List<Material> materials = materialRepository.findByCourseCohortAndTeacher(courseCohort, teacher);
 
         return materials.stream()
-                .map(materialService::mapToMaterialResponse)
+                .map(materialMapper::mapToMaterialResponse)
                 .toList();
     }
 
@@ -116,7 +116,7 @@ public class TeacherMaterialService {
         Material material = materialBuilder.build();
         materialRepository.save(material);
 
-        return materialService.mapToMaterialResponse(material);
+        return materialMapper.mapToMaterialResponse(material);
     }
 
     @Transactional
@@ -145,7 +145,7 @@ public class TeacherMaterialService {
         }
 
         materialRepository.save(material);
-        return materialService.mapToMaterialResponse(material);
+        return materialMapper.mapToMaterialResponse(material);
     }
 
     public MaterialDownloadResponse downloadMaterial(Integer materialId, Integer teacherId) {
@@ -305,7 +305,7 @@ public class TeacherMaterialService {
             material.setContent(request.getContent());
         }
         materialRepository.save(material);
-        return materialService.mapToMaterialResponse(material);
+        return materialMapper.mapToMaterialResponse(material);
     }
 
     private MaterialResponse updateFileMaterial(Material material, UpdateMaterialRequest request) {
@@ -313,7 +313,7 @@ public class TeacherMaterialService {
             material.setTitle(request.getTitle());
         }
         materialRepository.save(material);
-        return materialService.mapToMaterialResponse(material);
+        return materialMapper.mapToMaterialResponse(material);
     }
 
     static class InMemoryMultipartFile extends MockMultipartFile {
