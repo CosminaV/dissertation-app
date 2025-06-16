@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.service.JwtService;
@@ -20,7 +19,6 @@ import ro.ase.ism.dissertation.service.JwtService;
 import java.io.IOException;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor // creates a ctor using any final field it finds in the class
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

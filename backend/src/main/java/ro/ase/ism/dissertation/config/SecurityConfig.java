@@ -1,6 +1,7 @@
 package ro.ase.ism.dissertation.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,7 +17,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import ro.ase.ism.dissertation.filter.ApiKeyFilter;
 import ro.ase.ism.dissertation.filter.JwtAuthenticationFilter;
+import ro.ase.ism.dissertation.service.JwtService;
 
 @Configuration
 @EnableWebSecurity
@@ -24,14 +27,15 @@ import ro.ase.ism.dissertation.filter.JwtAuthenticationFilter;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthFilter;
+//    private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final CustomLogoutHandler customLogoutHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+//    private final ApiKeyFilter apiKeyFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter, ApiKeyFilter apiKeyFilter) throws Exception {
 
         return http
                 .cors(Customizer.withDefaults())
@@ -51,6 +55,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/student/**").hasAuthority("STUDENT")
                         .requestMatchers(HttpMethod.POST, "/api/user/profile-image").hasAnyAuthority("STUDENT", "TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/user/profile-image-url").hasAnyAuthority("STUDENT", "TEACHER")
+                        .requestMatchers(HttpMethod.POST, "/api/streaming/predictions").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/streaming").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/streaming/predictions/history").hasAuthority("TEACHER")
+                        .requestMatchers(HttpMethod.GET, "/api/streaming/submissions/history").hasAuthority("TEACHER")
                         .anyRequest()
                         .authenticated()
                 ).userDetailsService(userDetailsService)
@@ -69,6 +77,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
+                .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
@@ -78,5 +87,15 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // more secure version of the default HttpFirewall - blocks things like encoded clashes or malformed headers
         return webSecurity -> webSecurity.httpFirewall(new StrictHttpFirewall());
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
+    }
+
+    @Bean
+    public ApiKeyFilter apiKeyFilter(@Value("${biometrics.api-key}") String apiKey) {
+        return new ApiKeyFilter(apiKey);
     }
 }
