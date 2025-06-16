@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ro.ase.ism.dissertation.model.homework.Homework;
 import ro.ase.ism.dissertation.model.material.Material;
 import ro.ase.ism.dissertation.model.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -41,8 +41,5 @@ public class CourseGroup {
     private User practicalTeacher;
 
     @OneToMany(mappedBy = "courseGroup")
-    private List<Material> materials;
-
-    @OneToMany(mappedBy = "courseGroup")
-    private List<Homework> homeworks;
+    private List<Material> materials = new ArrayList<>();
 }

@@ -9,6 +9,7 @@ import ro.ase.ism.dissertation.model.course.EducationLevel;
 import ro.ase.ism.dissertation.model.course.StudentGroup;
 import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,8 +31,8 @@ public class Cohort {
     private EducationLevel educationLevel;
 
     @OneToMany(mappedBy = "cohort")
-    private List<StudentGroup> studentGroups;
+    private List<StudentGroup> studentGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "cohort")
-    private List<CourseCohort> courseCohorts;
+    private List<CourseCohort> courseCohorts = new ArrayList<>();
 }

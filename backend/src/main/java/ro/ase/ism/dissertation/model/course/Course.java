@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
-import ro.ase.ism.dissertation.model.exam.Exam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,11 +34,8 @@ public class Course {
     private EducationLevel educationLevel;
 
     @OneToMany(mappedBy = "course")
-    private List<CourseGroup> courseGroups;
+    private List<CourseGroup> courseGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "course")
-    private List<Exam> exams;
-
-    @OneToMany(mappedBy = "course")
-    private List<CourseCohort> courseCohorts;
+    private List<CourseCohort> courseCohorts = new ArrayList<>();
 }
