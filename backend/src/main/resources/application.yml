@@ -34,6 +34,10 @@ spring:
       enabled: true
       max-file-size: 5MB
       max-request-size: 6MB
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: Europe/Bucharest
 #  sql:
 #    init:
 #      mode: always
@@ -63,3 +67,6 @@ minio:
 watermarking:
   enc:
     secret: ${watermarking.enc.secret}
+
+biometrics:
+  api-key: ${biometrics.api-key}
