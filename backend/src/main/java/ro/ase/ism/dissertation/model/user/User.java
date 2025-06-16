@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ro.ase.ism.dissertation.model.token.RefreshToken;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class User implements UserDetails {
     private Integer tokenVersion = 0;
 
     @OneToMany(mappedBy = "user")
-    private List<RefreshToken> refreshTokens;
+    private List<RefreshToken> refreshTokens = new ArrayList<>();
 
     @Column(name = "face_image_path")
     private String faceImagePath;

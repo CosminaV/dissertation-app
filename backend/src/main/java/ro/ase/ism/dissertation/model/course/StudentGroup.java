@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ro.ase.ism.dissertation.model.cohort.Cohort;
 import ro.ase.ism.dissertation.model.user.Student;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,10 +33,10 @@ public class StudentGroup {
     private EducationLevel educationLevel;
 
     @OneToMany(mappedBy = "studentGroup")
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
 
     @OneToMany(mappedBy = "studentGroup")
-    private List<CourseGroup> courseGroups;
+    private List<CourseGroup> courseGroups = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "cohort_id", nullable = false)
