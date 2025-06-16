@@ -116,6 +116,41 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(InvalidExamPointsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidExamPoints(InvalidExamPointsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidExamPasswordException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidExamPassword(InvalidExamPasswordException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExamAlreadyStartedException.class)
+    public ResponseEntity<ErrorResponse> handleExamAlreadyStarted(ExamAlreadyStartedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExamAlreadySubmittedException.class)
+    public ResponseEntity<ErrorResponse> handleExamAlreadySubmitted(ExamAlreadySubmittedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ExamCryptoException.class)
+    public ResponseEntity<ErrorResponse> handleExamCrypto(ExamCryptoException ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Uploaded file is too large. Max allowed size is 5MB.");

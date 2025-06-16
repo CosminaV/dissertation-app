@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.ase.ism.dissertation.model.cohort.Cohort;
 import ro.ase.ism.dissertation.model.course.Course;
+import ro.ase.ism.dissertation.model.exam.Exam;
 import ro.ase.ism.dissertation.model.material.Material;
 import ro.ase.ism.dissertation.model.user.User;
 
@@ -40,4 +41,7 @@ public class CourseCohort {
 
     @OneToMany(mappedBy = "courseCohort")
     private List<Material> materials;
+
+    @OneToMany(mappedBy = "courseCohort")
+    private List<Exam> exams;
 }
