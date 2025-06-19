@@ -41,18 +41,19 @@ public class StegoService {
         int totalBits = 32 + msgLength * 8;
         int[] bits    = new int[totalBits];
 
-        // 1) length header (big-endian 32-bit)
+        // 1) encode length header (big-endian 32-bit): MSB first
         for (int i = 0; i < 32; i++) {
             bits[i] = (msgLength >> (31 - i)) & 1;
         }
-        // 2) message bytes
+        // 2) for each byte of your UTF-8 message, extract its eight bits from most significant (bit 7) to least (bit 0),
+        // and store them in bits[32]…, bits[33]… and so on.
         for (int i = 0; i < msgLength; i++) {
             for (int b = 0; b < 8; b++) {
                 bits[32 + i * 8 + b] = (msgBytes[i] >> (7 - b)) & 1;
             }
         }
 
-        // embed into image blue-LSBs
+        // 3) embed bits into the blue-channel LSB of each pixel:  for each bit write it into the least significant bit of the blue channel of one pixel
         int bitIndex = 0;
         outer:
         for (int y = 0; y < height; y++) {
@@ -67,9 +68,10 @@ public class StegoService {
                 int green = (rgb >>>  8) & 0xFF;
                 int blue  =  rgb & 0xFF;
 
-                // set LSB of blue to our next bit
+                // clear LSB ofb blue, then set LSB of blue to our next bit
                 blue = (blue & 0xFE) | bits[bitIndex++];
 
+                // reconstruct pixel and write back
                 int newRgb = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 image.setRGB(x, y, newRgb);
             }
@@ -90,6 +92,7 @@ public class StegoService {
         int height   = image.getHeight();
         int capacity = width * height;
 
+        // at least 32b for length
         if (capacity < 32) {
             throw new IllegalArgumentException("Image too small to contain message header.");
         }
@@ -110,7 +113,7 @@ public class StegoService {
             throw new IllegalArgumentException("Image does not contain full message.");
         }
 
-        // 2) read message bytes
+        // 2) read payload bits and reassemble bytes
         byte[] msgBytes = new byte[msgLength];
         for (int i = 0; i < totalMsgBits; i++) {
             int p = 32 + i;
@@ -118,137 +121,15 @@ public class StegoService {
             int y = p / width;
             int blue = image.getRGB(x, y) & 0xFF;
             int bit  = blue & 1;
-            // shift into corresponding byte
+            // shift into corresponding byte (MSG first)
             msgBytes[i / 8] = (byte) ((msgBytes[i / 8] << 1) | bit);
         }
 
+        // convert back to string
         try {
             return new String(msgBytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-//    public BufferedImage embed(BufferedImage image, String message) {
-//        byte[] messageBytes = message.getBytes();
-//        int messageLength = messageBytes.length;
-//
-//        if (messageLength > Integer.MAX_VALUE / 8)
-//            throw new IllegalArgumentException("Message too long to embed");
-//
-//        int width = image.getWidth();
-//        int height = image.getHeight();
-//        int capacity = width * height * 3; // 3 bits per pixel
-//
-//        int totalBitsToEmbed = (4 + messageLength) * 8;
-//        if (totalBitsToEmbed > capacity) {
-//            throw new IllegalArgumentException("Message too large to embed in this image");
-//        }
-//
-//        // First 4 bytes = message length
-//        byte[] data = new byte[4 + messageLength];
-//        data[0] = (byte) (messageLength >> 24);
-//        data[1] = (byte) (messageLength >> 16);
-//        data[2] = (byte) (messageLength >> 8);
-//        data[3] = (byte) (messageLength);
-//        System.arraycopy(messageBytes, 0, data, 4, messageLength);
-//
-//        int dataBitIndex = 0;
-//
-//        outer:
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                if (dataBitIndex >= data.length * 8) {
-//                    break outer;
-//                }
-//
-//                int rgb = image.getRGB(x, y);
-//                int r = (rgb >> 16) & 0xFF;
-//                int g = (rgb >> 8) & 0xFF;
-//                int b = rgb & 0xFF;
-//
-//                r = setLSB(r, getBit(data, dataBitIndex++));
-//                if (dataBitIndex < data.length * 8)
-//                    g = setLSB(g, getBit(data, dataBitIndex++));
-//                if (dataBitIndex < data.length * 8)
-//                    b = setLSB(b, getBit(data, dataBitIndex++));
-//
-//                int newRGB = (r << 16) | (g << 8) | b;
-//                image.setRGB(x, y, (0xFF << 24) | newRGB); // keep alpha
-//            }
-//        }
-//
-//        return image;
-//    }
-//
-//    public String extract(BufferedImage image) {
-//        int width = image.getWidth();
-//        int height = image.getHeight();
-//
-//        byte[] lengthBytes = new byte[4];
-//        int bitIndex = 0;
-//
-//        // First extract 32 bits = message length
-//        for (int i = 0; i < 32; i++) {
-//            int x = (bitIndex / 3) % width;
-//            int y = (bitIndex / 3) / width;
-//            int rgb = image.getRGB(x, y);
-//
-//            int color = switch (bitIndex % 3) {
-//                case 0 -> (rgb >> 16) & 0xFF;
-//                case 1 -> (rgb >> 8) & 0xFF;
-//                default -> rgb & 0xFF;
-//            };
-//
-//            setBit(lengthBytes, i, getLSB(color));
-//            bitIndex++;
-//        }
-//
-//        int messageLength = ((lengthBytes[0] & 0xFF) << 24)
-//                | ((lengthBytes[1] & 0xFF) << 16)
-//                | ((lengthBytes[2] & 0xFF) << 8)
-//                | (lengthBytes[3] & 0xFF);
-//
-//        byte[] messageBytes = new byte[messageLength];
-//        for (int i = 0; i < messageLength * 8; i++) {
-//            int x = (bitIndex / 3) % width;
-//            int y = (bitIndex / 3) / width;
-//            int rgb = image.getRGB(x, y);
-//
-//            int color = switch (bitIndex % 3) {
-//                case 0 -> (rgb >> 16) & 0xFF;
-//                case 1 -> (rgb >> 8) & 0xFF;
-//                default -> rgb & 0xFF;
-//            };
-//
-//            setBit(messageBytes, i, getLSB(color));
-//            bitIndex++;
-//        }
-//
-//        return new String(messageBytes);
-//    }
-
-    private int getBit(byte[] data, int bitIndex) {
-        int byteIndex = bitIndex / 8;
-        int bitPos = 7 - (bitIndex % 8);
-        return (data[byteIndex] >> bitPos) & 1;
-    }
-
-    private void setBit(byte[] data, int bitIndex, int value) {
-        int byteIndex = bitIndex / 8;
-        int bitPos = 7 - (bitIndex % 8);
-        if (value == 1) {
-            data[byteIndex] |= (byte) (1 << bitPos);
-        } else {
-            data[byteIndex] &= (byte) ~(1 << bitPos);
-        }
-    }
-
-    private int setLSB(int value, int bit) {
-        return (value & 0xFE) | bit;
-    }
-
-    private int getLSB(int value) {
-        return value & 1;
     }
 }
