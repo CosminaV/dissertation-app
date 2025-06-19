@@ -43,9 +43,6 @@ public class ExamSubmission {
     @Column(name = "score")
     private Double score;
 
-//    @Embedded
-//    private CheatingSummary cheatingSummary;
-
     @Column(name = "encrypted_answers")
     private String encryptedAnswers;
 }
