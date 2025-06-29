@@ -195,6 +195,7 @@ public class ExamSubmissionService {
         return ExamSubmissionResponse.builder()
                 .startedAt(submission.getStartedAt())
                 .submittedAt(submission.getSubmittedAt())
+                .grade(submission.getGrade())
                 .build();
     }
 
