@@ -27,12 +27,10 @@ import ro.ase.ism.dissertation.service.JwtService;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-//    private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final CustomLogoutHandler customLogoutHandler;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
-//    private final ApiKeyFilter apiKeyFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter, ApiKeyFilter apiKeyFilter) throws Exception {
@@ -56,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/user/profile-image").hasAnyAuthority("STUDENT", "TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/user/profile-image-url").hasAnyAuthority("STUDENT", "TEACHER")
                         .requestMatchers(HttpMethod.POST, "/api/streaming/predictions").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/streaming").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/streaming").hasAuthority("TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/streaming/predictions/history").hasAuthority("TEACHER")
                         .requestMatchers(HttpMethod.GET, "/api/streaming/submissions/history").hasAuthority("TEACHER")
                         .anyRequest()

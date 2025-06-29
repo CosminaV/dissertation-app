@@ -3,6 +3,7 @@ package ro.ase.ism.dissertation.filter;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +35,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @Nonnull FilterChain filterChain) throws ServletException, IOException {
 
         final String authorizationHeader = request.getHeader("Authorization"); //it has the Bearer token
-        final String jwt;
-        final String userEmail;
-        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+        String jwt = null;
+        String userEmail;
+//        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            //extract the token from the auth header
+            jwt = authorizationHeader.substring(7);
+        }
+        else {
+            if (request.getCookies() != null) {
+                for (Cookie c : request.getCookies()) {
+                    if ("SSE_TOKEN".equals(c.getName())) {
+                        jwt = c.getValue();
+                        break;
+                    }
+                }
+            }
+            if (jwt == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
-        //extract the token from the auth header
-        jwt = authorizationHeader.substring(7);
         //extract the user's email from the JWT token
         userEmail = jwtService.extractUsername(jwt);
         // if user is not connected yet

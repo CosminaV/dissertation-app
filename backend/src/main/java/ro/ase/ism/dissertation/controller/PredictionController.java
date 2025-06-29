@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import ro.ase.ism.dissertation.dto.exam.PredictionRecordRequest;
 import ro.ase.ism.dissertation.dto.exam.PredictionRecordResponse;
 import ro.ase.ism.dissertation.dto.exam.SubmissionCompletedEventResponse;
+import ro.ase.ism.dissertation.model.user.User;
 import ro.ase.ism.dissertation.service.ExamSubmissionService;
 import ro.ase.ism.dissertation.service.PredictionRecordService;
 import ro.ase.ism.dissertation.service.PredictionStreamService;
@@ -28,7 +30,6 @@ import java.util.List;
 public class PredictionController {
 
     private final PredictionRecordService predictionRecordService;
-    private final PredictionStreamService predictionStreamService;
     private final ExamSubmissionService examSubmissionService;
 
     @PostMapping("/predictions")
@@ -53,7 +54,7 @@ public class PredictionController {
 
     @CrossOrigin(origins = "https://localhost:3000")
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter stream(@RequestParam Integer examId) {
-        return predictionStreamService.register(examId);
+    public SseEmitter stream(@RequestParam Integer examId, @AuthenticationPrincipal User user) {
+        return examSubmissionService.streamPredictions(examId, user.getId());
     }
 }

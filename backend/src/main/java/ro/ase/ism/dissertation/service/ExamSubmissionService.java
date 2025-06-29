@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import ro.ase.ism.dissertation.dto.exam.AnswerResponse;
 import ro.ase.ism.dissertation.dto.exam.ExamStartResponse;
 import ro.ase.ism.dissertation.dto.exam.ExamSubmissionRequest;
@@ -14,6 +15,7 @@ import ro.ase.ism.dissertation.exception.ConflictException;
 import ro.ase.ism.dissertation.exception.EntityNotFoundException;
 import ro.ase.ism.dissertation.exception.ExamAlreadyStartedException;
 import ro.ase.ism.dissertation.exception.ExamAlreadySubmittedException;
+import ro.ase.ism.dissertation.model.coursecohort.CourseCohort;
 import ro.ase.ism.dissertation.model.exam.Exam;
 import ro.ase.ism.dissertation.model.exam.ExamQuestion;
 import ro.ase.ism.dissertation.model.exam.ExamSubmission;
@@ -22,6 +24,7 @@ import ro.ase.ism.dissertation.repository.ExamQuestionRepository;
 import ro.ase.ism.dissertation.repository.ExamRepository;
 import ro.ase.ism.dissertation.repository.ExamSubmissionRepository;
 import ro.ase.ism.dissertation.repository.StudentRepository;
+import ro.ase.ism.dissertation.service.teacher.TeacherAccessService;
 
 import java.time.Instant;
 import java.util.List;
@@ -40,6 +43,7 @@ public class ExamSubmissionService {
     private final ExamQuestionRepository examQuestionRepository;
     private final PredictionStreamService predictionStreamService;
     private final EncryptionService encryptionService;
+    private final TeacherAccessService teacherAccessService;
 
     @Transactional
     public ExamStartResponse startExam(Integer examId, Integer studentId) {
@@ -251,6 +255,16 @@ public class ExamSubmissionService {
 
         Integer examId = submission.getExam().getId();
         predictionStreamService.publishSubmissionEvent(examId, evt);
+    }
+
+    public SseEmitter streamPredictions(Integer examId, Integer teacherId) {
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new EntityNotFoundException("Exam not found"));
+
+        CourseCohort courseCohort = exam.getCourseCohort();
+        teacherAccessService.validateTeacherAccessToCourseCohort(courseCohort, teacherId);
+
+        return predictionStreamService.register(examId);
     }
 
 //    private void publishSubmissionEvent(ExamSubmission submission) {

@@ -118,13 +118,15 @@ public class AuthenticationService {
 
         var accessToken = jwtService.generateAccessToken(new HashMap<>(), user);
 
-        // create cookie for the refresh token
-        ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
+        // create cookie for the refresh token and for the SSE connection
+        ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken, "/api/auth/refresh", 7 * 24 * 60 * 60);
+        ResponseCookie sseCookie = createCookie("SSE_TOKEN", accessToken, "/api/streaming", 900000);
 
         boolean faceImageRequired = user.getRole() != Role.ADMIN && user.getFaceImagePath() == null;
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, sseCookie.toString())
                 .body(AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .faceImageRequired(faceImageRequired)
@@ -163,7 +165,7 @@ public class AuthenticationService {
 
         saveRefreshToken(refreshToken, user);
 
-        ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken);
+        ResponseCookie refreshCookie = createCookie("refreshToken", refreshToken, "/api/auth/refresh", 7 * 24 * 60 * 60);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
@@ -192,7 +194,11 @@ public class AuthenticationService {
 
             String newAccessToken = jwtService.generateAccessToken(new HashMap<>(), user);
 
+            // recreate cookie for the sse
+            ResponseCookie sseCookie = createCookie("SSE_TOKEN", newAccessToken, "/api/streaming", 900000);
+
             return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, sseCookie.toString())
                     .body(AuthenticationResponse.builder()
                             .accessToken(newAccessToken)
                             .build());
@@ -248,13 +254,13 @@ public class AuthenticationService {
         refreshTokenRepository.save(dbRefreshToken);
     }
 
-    private ResponseCookie createCookie(String name, String value) {
+    private ResponseCookie createCookie(String name, String value, String path, long maxAgeSeconds) {
         return ResponseCookie.from(name, value)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("None")
-                .path("/api/auth/refresh")
-                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Strict")
+                .path(path)
+                .maxAge(maxAgeSeconds)
                 .build();
     }
 }

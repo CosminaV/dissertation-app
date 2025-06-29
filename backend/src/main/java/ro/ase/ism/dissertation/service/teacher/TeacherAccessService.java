@@ -19,7 +19,7 @@ public class TeacherAccessService {
         }
     }
 
-    void validateTeacherAccessToCourseCohort(CourseCohort courseCohort, Integer teacherId) {
+    public void validateTeacherAccessToCourseCohort(CourseCohort courseCohort, Integer teacherId) {
         if (!courseCohort.getLectureTeacher().getId().equals(teacherId)) {
             String cohortName = courseCohort.getCohort().getName();
             String courseName = courseCohort.getCourse().getName();
