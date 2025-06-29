@@ -3,6 +3,7 @@ import api from "../api";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/setpassword.css";
 import "../styles/form-inputs.css";
+import {useAuth} from "../context/AuthContext";
 
 const SetPasswordPage = () => {
     const [password, setPassword] = useState("");
@@ -10,6 +11,7 @@ const SetPasswordPage = () => {
     const location = useLocation();
     const email = location.state?.email;
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +21,10 @@ const SetPasswordPage = () => {
         try {
             await api.post("/auth/set-password", payload);
             setMessage("Password set successfully! Redirecting to login...");
-            setTimeout(() => navigate("/login"), 2000);
+            setTimeout(() => {
+                logout();
+                navigate("/login")
+            }, 2000);
         } catch (error) {
             console.error(error.response.data);
             setMessage(error.response.data.error);
