@@ -29,15 +29,23 @@ spring:
     url: ${db.url}
     username: ${db.username}
     password: ${db.password}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    time-zone: Europe/Bucharest
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${smtp.username}
+    password: ${smtp.password}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   servlet:
     multipart:
       enabled: true
       max-file-size: 5MB
       max-request-size: 6MB
-  jackson:
-    deserialization:
-      fail-on-unknown-properties: false
-    time-zone: Europe/Bucharest
 #  sql:
 #    init:
 #      mode: always
