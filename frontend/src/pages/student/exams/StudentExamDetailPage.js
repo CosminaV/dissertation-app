@@ -268,21 +268,40 @@ const StudentExamDetailPage = () => {
                         <>
                             <p><strong>Started at:</strong> {submissionInfo.startedAt}</p>
                             <p><strong>Submitted at:</strong> {submissionInfo.submittedAt}</p>
+                            <p>
+                                <strong>Grade:</strong>{" "}
+                                {submissionInfo.grade != null ? `${submissionInfo.grade.toFixed(2)} / 10` : "Not graded yet"}
+                            </p>
                         </>
                     )}
                 </>
             )}
 
             {!submissionInfo?.submittedAt && !passwordVerified && (
-                <div className="password-check">
+                <form
+                    className="password-check"
+                    onSubmit={e => {
+                        e.preventDefault();
+                        handleVerifyPassword();
+                    }}
+                >
                     <input
                         type="password"
                         placeholder="Enter exam password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={e => setPassword(e.target.value)}
                     />
-                    <button onClick={handleVerifyPassword}>Verify Password</button>
-                </div>
+                    <button type="submit">Verify Password</button>
+                </form>
+                // <div className="password-check">
+                //     <input
+                //         type="password"
+                //         placeholder="Enter exam password"
+                //         value={password}
+                //         onChange={(e) => setPassword(e.target.value)}
+                //     />
+                //     <button onClick={handleVerifyPassword}>Verify Password</button>
+                // </div>
             )}
 
             {!submissionInfo?.submittedAt && passwordVerified && !verifiedFace && (
