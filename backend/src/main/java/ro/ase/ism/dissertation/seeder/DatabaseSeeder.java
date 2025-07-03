@@ -317,42 +317,42 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // 4. Courses
         List<Course> courses = List.of(
-                new Course(null, "Intro to Java", 1, 1, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "Data Structures", 1, 2, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "Databases", 2, 1, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "Web Dev", 2, 2, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "OS", 3, 1, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "Security", 3, 2, EducationLevel.BACHELOR, null, null, null),
-                new Course(null, "Advanced ML", 1, 1, EducationLevel.MASTER, null, null, null),
-                new Course(null, "Deep Learning", 1, 2, EducationLevel.MASTER, null, null, null),
-                new Course(null, "Research Methods", 1, 1, EducationLevel.PHD, null, null, null),
-                new Course(null, "Scientific Writing", 1, 2, EducationLevel.PHD, null, null, null)
+                new Course(null, "Intro to Java", 1, 1, EducationLevel.BACHELOR, null, null),
+                new Course(null, "Data Structures", 1, 2, EducationLevel.BACHELOR, null, null),
+                new Course(null, "Databases", 2, 1, EducationLevel.BACHELOR, null, null),
+                new Course(null, "Web Dev", 2, 2, EducationLevel.BACHELOR, null, null),
+                new Course(null, "OS", 3, 1, EducationLevel.BACHELOR, null, null),
+                new Course(null, "Security", 3, 2, EducationLevel.BACHELOR, null, null),
+                new Course(null, "Advanced ML", 1, 1, EducationLevel.MASTER, null, null),
+                new Course(null, "Deep Learning", 1, 2, EducationLevel.MASTER, null, null),
+                new Course(null, "Research Methods", 1, 1, EducationLevel.PHD, null, null),
+                new Course(null, "Scientific Writing", 1, 2, EducationLevel.PHD, null, null)
         ).stream().map(courseRepository::save).toList();
 
         // 5. Course Cohorts
-        courseCohortRepository.save(new CourseCohort(null, 2023, courses.get(0), cohortA, teachers.get(0), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(0), cohortA, teachers.get(0), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(1), cohortA, teachers.get(1), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(2), cohortB, teachers.get(2), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(3), cohortB, teachers.get(3), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(4), cohortB, teachers.get(4), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(5), cohortB, teachers.get(5), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(6), cohortC, teachers.get(6), null));
-        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(7), cohortC, teachers.get(7), null));
+        courseCohortRepository.save(new CourseCohort(null, 2023, courses.get(0), cohortA, teachers.get(0), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(0), cohortA, teachers.get(0), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(1), cohortA, teachers.get(1), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(2), cohortB, teachers.get(2), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(3), cohortB, teachers.get(3), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(4), cohortB, teachers.get(4), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(5), cohortB, teachers.get(5), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(6), cohortC, teachers.get(6), null, null));
+        courseCohortRepository.save(new CourseCohort(null, 2024, courses.get(7), cohortC, teachers.get(7), null, null));
 
         // 6. Course Groups
-        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1010, teachers.get(1), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1011, teachers.get(3), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1010, teachers.get(1), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1011, teachers.get(3), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(2), g1020, teachers.get(4), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(3), g1020, teachers.get(5), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(4), g1021, teachers.get(6), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(5), g1021, teachers.get(7), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(6), g1030, teachers.get(0), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(7), g1030, teachers.get(1), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(8), g1200, teachers.get(2), null, null));
-        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(9), g1200, teachers.get(3), null, null));
+        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1010, teachers.get(1), null));
+        courseGroupRepository.save(new CourseGroup(null, 2023, courses.get(0), g1011, teachers.get(3), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1010, teachers.get(1), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(0), g1011, teachers.get(3), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(2), g1020, teachers.get(4), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(3), g1020, teachers.get(5), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(4), g1021, teachers.get(6), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(5), g1021, teachers.get(7), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(6), g1030, teachers.get(0), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(7), g1030, teachers.get(1), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(8), g1200, teachers.get(2), null));
+        courseGroupRepository.save(new CourseGroup(null, 2024, courses.get(9), g1200, teachers.get(3), null));
 
         log.info("Initial test data loaded successfully.");
     }
