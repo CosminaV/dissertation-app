@@ -56,6 +56,7 @@ services:
       - "9001:9001"     # Console (web UI)
     volumes:
       - minio_data:/data
+      - ./minio/certs:/root/.minio/certs:ro
     networks:
       - backend
     restart: unless-stopped

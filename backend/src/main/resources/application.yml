@@ -71,6 +71,8 @@ minio:
   accessKey: ${minio.accessKey}
   secretKey: ${minio.secretKey}
   bucketName: ${minio.bucketName}
+  trust-store: classpath:minio-trust.jks
+  trust-store-password: ${MINIO_TRUST_STORE_PASSWORD}
 
 watermarking:
   enc:
