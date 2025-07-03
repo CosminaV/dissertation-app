@@ -4,7 +4,6 @@ import NavbarCommon from "../../components/NavbarCommon";
 
 const NavbarAdmin = ({ userName }) => (
     <NavbarCommon userName={userName}>
-        <Link to="/dashboard">Dashboard</Link>
         <Link to="/admin/users">Users</Link>
         <Link to="/admin/cohorts">Cohorts</Link>
         <Link to="/admin/student-groups">Student Groups</Link>

@@ -6,7 +6,7 @@ const Forbidden = () => {
         <div className="error-page">
             <h2>403 - Access Denied</h2>
             <p>You don’t have permission to view this page.</p>
-            <Link to="/dashboard">Go back to Dashboard</Link>
+            <Link to="/">Go back to the Landing Page</Link>
         </div>
     );
 };

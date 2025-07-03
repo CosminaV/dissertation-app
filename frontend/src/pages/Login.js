@@ -35,7 +35,7 @@ const Login = () => {
             } else if (faceImageRequired) {
                 navigate("/upload-profile-image")
             } else {
-                navigate("/dashboard");
+                navigate("/");
             }
         } catch (err) {
             if (err.response) {

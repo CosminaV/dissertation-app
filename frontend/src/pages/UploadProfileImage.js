@@ -61,7 +61,7 @@ const UploadProfileImage = () => {
             });
 
             await biometricsApi.get("/profile-image/analyze-profile-image");
-            navigate("/dashboard", { replace: true });
+            navigate("/", { replace: true });
         } catch (err) {
             const detail = err.response?.data?.detail || err.response?.data?.error;
             setMessage(detail || "Something went wrong. Please try again.");

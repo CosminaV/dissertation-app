@@ -1,7 +1,6 @@
 import React from "react";
-import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 import SetPasswordPage from "./pages/SetPassword";
 import PrivateRoute from "./components/PrivateRoute";
 import {AuthProvider} from "./context/AuthContext";
@@ -24,6 +23,7 @@ import UploadProfileImage from "./pages/UploadProfileImage";
 import TeacherExamDetailPage from "./pages/teacher/exams/TeacherExamDetailPage";
 import StudentExamDetailPage from "./pages/student/exams/StudentExamDetailPage";
 import TeacherExamMonitoringPage from "./pages/teacher/exams/TeacherExamMonitoringPage";
+import DefaultRedirect from "./pages/DefaultRedirect";
 const App = () => {
   return (
       <Router>
@@ -31,8 +31,7 @@ const App = () => {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<PrivateRoute />}>
-                    <Route index element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route index element={<DefaultRedirect/>} />
                 </Route>
                 <Route path="/admin/users" element={<PrivateRoute allowedRoles={["ADMIN"]}><UsersPage /></PrivateRoute>} />
                 <Route path="/admin/cohorts" element={<PrivateRoute allowedRoles={["ADMIN"]}><CohortListPage /></PrivateRoute>} />
@@ -51,7 +50,6 @@ const App = () => {
                 <Route path="/student/courses" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCoursesPage /></PrivateRoute>} />
                 <Route path="/student/courses/course-groups/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseGroupDetailPage /></PrivateRoute>} />
                 <Route path="/student/courses/course-cohorts/:targetId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentCourseCohortDetailPage /></PrivateRoute>} />
-                {/*<Route path="/student/exams" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamPage /></PrivateRoute>} />*/}
                 <Route path="/student/exams/:examId" element={<PrivateRoute allowedRoles={["STUDENT"]}><StudentExamDetailPage /></PrivateRoute>} />
 
                 <Route path="/set-password" element={<SetPasswordPage />} />
