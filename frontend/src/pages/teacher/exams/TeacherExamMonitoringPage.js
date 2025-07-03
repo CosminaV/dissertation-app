@@ -64,7 +64,7 @@ const TeacherExamMonitoringPage = () => {
     }, [examId]);
 
     useEffect(() => {
-        const source = new EventSource(`https://localhost:8443/api/streaming?examId=${examId}`);
+        const source = new EventSource(`https://localhost:8443/api/streaming?examId=${examId}`, { withCredentials: true });
         source.addEventListener("prediction", (event) => {
             const data = JSON.parse(event.data);
             const { studentId, windowIndex, predictedClass, probabilities, timestamp } = data;
